@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    /* background-color: var(--grey-bg); color: var(--blue-dark); font-family: Roboto... */
+    @apply bg-grey-bg text-blue-dark font-sans;
+  }
+
+  h1, h2, h3 {
+    /* font-family: var(--font-montserrat)... */
+    @apply font-heading;
+  }
+}

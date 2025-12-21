@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Mi Sitio Web{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "blue-dark": "#1a2332",
+              "red-accent": "#d63031",
+              "grey-bg": "#f5f5f5",
+            },
+            fontFamily: {
+              heading: ["Montserrat", "sans-serif"],
+              sans: ["Roboto", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body class="bg-grey-bg text-blue-dark font-sans flex flex-col min-h-screen">
+    <header class="sticky top-0 z-50 bg-blue-dark py-4 px-6 lg:px-20 shadow-md">
+      <div class="flex justify-between items-center max-w-[1200px] mx-auto">
+        <a
+          href="/"
+          class="font-heading font-bold tracking-[2px] text-white text-xl z-50 relative"
+        >
+          MOTO<span class="text-red-accent">LUXE</span>
+        </a>
+
+        <nav>
+          <ul
+            id="nav-menu"
+            class="hidden lg:flex flex-col lg:flex-row gap-8 lg:gap-12 list-none absolute lg:static top-0 left-0 w-full h-screen lg:h-auto bg-blue-dark lg:bg-transparent items-center justify-center lg:justify-end transition-all duration-300 z-40"
+          >
+            <li>
+              <a
+                href="/"
+                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >Inicio</a
+              >
+            </li>
+            <li>
+              <a
+                href="/motos"
+                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >MOTOS</a
+              >
+            </li>
+            <li>
+              <a
+                href="/ebikes"
+                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >E-BIKES</a
+              >
+            </li>
+          </ul>
+
+          <button
+            id="menu-btn"
+            class="lg:hidden text-white focus:outline-none z-50 relative"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-grow px-6 lg:px-20 py-10 max-w-[1200px] w-full mx-auto">
+      {% block content %} {% endblock %}
+    </main>
+
+    <footer class="bg-blue-dark text-white pt-16 pb-8 px-6 lg:px-20 mt-auto">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-10 max-w-[1200px] mx-auto"
+      >
+        <div class="footer-brand">
+          <div class="font-heading font-bold tracking-[2px] text-xl">
+            LOGO<span class="text-red-accent">TYPE</span>
+          </div>
+          <p class="mt-4 text-white/60 text-sm leading-relaxed">
+            Soluciones digitales adaptadas a tus necesidades. Calidad y diseño
+            en cada pixel.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <h4
+            class="mb-5 uppercase text-sm text-red-accent font-heading font-bold"
+          >
+            Enlaces
+          </h4>
+          <ul class="space-y-3">
+            <li>
+              <a
+                href="#"
+                class="text-white/80 hover:text-white transition-opacity text-sm"
+                >Inicio</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-white/80 hover:text-white transition-opacity text-sm"
+                >Proyectos</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-white/80 hover:text-white transition-opacity text-sm"
+                >Contacto</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-contact">
+          <h4
+            class="mb-5 uppercase text-sm text-red-accent font-heading font-bold"
+          >
+            Contacto
+          </h4>
+          <ul class="space-y-3 text-sm">
+            <li class="text-white/80">info@logotype.com</li>
+            <li class="text-white/80">+34 600 000 000</li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="mt-12 pt-8 border-t border-white/10 text-center text-xs text-white/50"
+      >
+        &copy; 2025 Logotype Inc. Todos los derechos reservados.
+      </div>
+    </footer>
+
+    <script>
+      // Lógica simple para el menú móvil
+      const menuBtn = document.getElementById("menu-btn");
+      const navMenu = document.getElementById("nav-menu");
+
+      menuBtn.addEventListener("click", () => {
+        navMenu.classList.toggle("hidden");
+        navMenu.classList.toggle("flex");
+      });
+    </script>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
