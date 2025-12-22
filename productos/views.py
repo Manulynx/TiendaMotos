@@ -2,5 +2,6 @@ from django.shortcuts import render
 
 # Create your views here.
 
-def home(request):
-    return render(request, 'home.html')
+def lista(request):
+    return render(request, 'productos/lista.html')
+
