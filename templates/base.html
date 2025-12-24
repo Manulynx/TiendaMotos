@@ -71,14 +71,19 @@
               </svg>
             </div>
           </div>
-          
+
           <!-- Resultados de búsqueda Desktop -->
           <div
             id="search-results"
             class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 hidden overflow-hidden z-50"
           >
-            <div id="search-loading" class="hidden p-4 text-center text-gray-500">
-              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-dark mx-auto"></div>
+            <div
+              id="search-loading"
+              class="hidden p-4 text-center text-gray-500"
+            >
+              <div
+                class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-dark mx-auto"
+              ></div>
               <span class="ml-2">Buscando...</span>
             </div>
             <div id="search-content" class="max-h-96 overflow-y-auto"></div>
@@ -160,7 +165,7 @@
               </svg>
             </div>
           </div>
-          
+
           <!-- Resultados búsqueda móvil -->
           <div
             id="mobile-search-results"
@@ -333,7 +338,7 @@
           // Cerrar menú hamburguesa si está abierto
           navMenu.classList.add("hidden");
           navMenu.classList.remove("flex");
-          
+
           if (!mobileSearch.classList.contains("hidden")) {
             setTimeout(() => {
               document.getElementById("mobile-search-input").focus();
