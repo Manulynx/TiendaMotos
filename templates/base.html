@@ -45,41 +45,78 @@
           MOTO<span class="text-red-accent">LUXE</span>
         </a>
 
-        <nav>
-          <ul
-            id="nav-menu"
-            class="hidden lg:flex flex-col lg:flex-row gap-8 lg:gap-12 list-none absolute lg:static top-0 left-0 w-full h-screen lg:h-auto bg-blue-dark lg:bg-transparent items-center justify-center lg:justify-end transition-all duration-300 z-40"
+        <!-- Buscador de Lujo Desktop -->
+        <div class="hidden lg:flex items-center relative flex-1 max-w-md mx-8">
+          <div class="relative w-full">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Buscar productos..."
+              class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2.5 pr-12 text-white placeholder-white/70 focus:outline-none focus:bg-white/20 focus:border-red-accent transition-all duration-300"
+              autocomplete="off"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+              <svg
+                class="w-5 h-5 text-white/70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Resultados de búsqueda Desktop -->
+          <div
+            id="search-results"
+            class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 hidden overflow-hidden z-50"
           >
-            <li>
-              <a
-                href="/"
-                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
-                >Inicio</a
-              >
-            </li>
-            <li>
-              <a
-                href="/motos"
-                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
-                >MOTOS</a
-              >
-            </li>
-            <li>
-              <a
-                href="/ebikes"
-                class="text-white text-lg lg:text-xs uppercase hover:text-red-accent transition-colors duration-300"
-                >E-BIKES</a
-              >
-            </li>
-          </ul>
+            <div id="search-loading" class="hidden p-4 text-center text-gray-500">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-dark mx-auto"></div>
+              <span class="ml-2">Buscando...</span>
+            </div>
+            <div id="search-content" class="max-h-96 overflow-y-auto"></div>
+          </div>
+        </div>
 
+        <!-- Controles móviles - Pegados a la derecha -->
+        <div class="lg:hidden flex items-center gap-2 ml-auto">
+          <!-- Botón búsqueda móvil -->
+          <button
+            id="mobile-search-btn"
+            class="text-white focus:outline-none z-50 relative p-2 hover:bg-white/10 rounded-lg transition-colors"
+            title="Buscar productos"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Botón menú hamburguesa -->
           <button
             id="menu-btn"
-            class="lg:hidden text-white focus:outline-none z-50 relative"
+            class="text-white focus:outline-none z-50 relative p-2 hover:bg-white/10 rounded-lg transition-colors"
+            title="Menú"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
+              class="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -92,6 +129,116 @@
               />
             </svg>
           </button>
+        </div>
+
+        <!-- Buscador móvil -->
+        <div
+          id="mobile-search"
+          class="lg:hidden absolute top-full left-0 right-0 bg-blue-dark p-4 hidden z-40"
+        >
+          <div class="relative">
+            <input
+              type="text"
+              id="mobile-search-input"
+              placeholder="Buscar productos..."
+              class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 pr-12 text-white placeholder-white/70 focus:outline-none focus:bg-white/20 focus:border-red-accent transition-all duration-300"
+              autocomplete="off"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+              <svg
+                class="w-5 h-5 text-white/70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Resultados búsqueda móvil -->
+          <div
+            id="mobile-search-results"
+            class="mt-3 bg-white rounded-lg shadow-xl border border-gray-200 hidden overflow-hidden max-h-80 overflow-y-auto"
+          >
+            <div id="mobile-search-content"></div>
+          </div>
+        </div>
+
+        <!-- Navegación -->
+        <nav class="hidden lg:block">
+          <ul class="flex gap-12 list-none">
+            <li>
+              <a
+                href="/"
+                class="text-white text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >Inicio</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=1"
+                class="text-white text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >MOTOS</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=3"
+                class="text-white text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >E-BIKES</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=2"
+                class="text-white text-xs uppercase hover:text-red-accent transition-colors duration-300"
+                >TRICICLOS</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Menú móvil -->
+        <nav>
+          <ul
+            id="nav-menu"
+            class="hidden lg:hidden flex-col gap-8 list-none absolute top-0 left-0 w-full h-screen bg-blue-dark items-center justify-center transition-all duration-300 z-40"
+          >
+            <li>
+              <a
+                href="/"
+                class="text-white text-lg uppercase hover:text-red-accent transition-colors duration-300"
+                >Inicio</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=1"
+                class="text-white text-lg uppercase hover:text-red-accent transition-colors duration-300"
+                >MOTOS</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=3"
+                class="text-white text-lg uppercase hover:text-red-accent transition-colors duration-300"
+                >E-BIKES</a
+              >
+            </li>
+            <li>
+              <a
+                href="{% url 'productos:lista' %}?categoria=2"
+                class="text-white text-lg uppercase hover:text-red-accent transition-colors duration-300"
+                >TRICICLOS</a
+              >
+            </li>
+          </ul>
         </nav>
       </div>
     </header>
@@ -99,8 +246,6 @@
     <main class="flex-grow px-6 lg:px-20 py-10 max-w-[1200px] w-full mx-auto">
       {% block content %} {% endblock %}
     </main>
-
-    
 
     <footer class="bg-blue-dark text-white pt-16 pb-8 px-6 lg:px-20 mt-auto">
       <div
@@ -170,11 +315,218 @@
       // Lógica simple para el menú móvil
       const menuBtn = document.getElementById("menu-btn");
       const navMenu = document.getElementById("nav-menu");
+      const mobileSearchBtn = document.getElementById("mobile-search-btn");
+      const mobileSearch = document.getElementById("mobile-search");
 
       menuBtn.addEventListener("click", () => {
         navMenu.classList.toggle("hidden");
         navMenu.classList.toggle("flex");
+        // Ocultar búsqueda móvil cuando se abre/cierra el menú
+        mobileSearch.classList.add("hidden");
       });
+
+      // Botón de búsqueda móvil (independiente del menú hamburguesa)
+      if (mobileSearchBtn) {
+        mobileSearchBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevenir que se propague al documento
+          mobileSearch.classList.toggle("hidden");
+          // Cerrar menú hamburguesa si está abierto
+          navMenu.classList.add("hidden");
+          navMenu.classList.remove("flex");
+          
+          if (!mobileSearch.classList.contains("hidden")) {
+            setTimeout(() => {
+              document.getElementById("mobile-search-input").focus();
+            }, 100);
+          }
+        });
+      }
+
+      // Buscador de lujo con vista previa (Desktop)
+      let searchTimeout;
+      const searchInput = document.getElementById("search-input");
+      const searchResults = document.getElementById("search-results");
+      const searchContent = document.getElementById("search-content");
+      const searchLoading = document.getElementById("search-loading");
+
+      // Buscador móvil
+      const mobileSearchInput = document.getElementById("mobile-search-input");
+      const mobileSearchResults = document.getElementById(
+        "mobile-search-results"
+      );
+      const mobileSearchContent = document.getElementById(
+        "mobile-search-content"
+      );
+
+      if (searchInput) {
+        searchInput.addEventListener("input", function (e) {
+          handleSearch(e.target.value.trim(), false);
+        });
+
+        searchInput.addEventListener("focus", function () {
+          if (searchInput.value.trim().length >= 2) {
+            searchResults.classList.remove("hidden");
+          }
+        });
+      }
+
+      if (mobileSearchInput) {
+        mobileSearchInput.addEventListener("input", function (e) {
+          handleSearch(e.target.value.trim(), true);
+        });
+
+        mobileSearchInput.addEventListener("focus", function () {
+          if (mobileSearchInput.value.trim().length >= 2) {
+            mobileSearchResults.classList.remove("hidden");
+          }
+        });
+      }
+
+      function handleSearch(query, isMobile) {
+        // Limpiar timeout anterior
+        clearTimeout(searchTimeout);
+
+        if (query.length < 2) {
+          hideSearchResults(isMobile);
+          return;
+        }
+
+        // Mostrar loading
+        if (!isMobile) {
+          showLoading();
+        }
+
+        // Buscar con delay
+        searchTimeout = setTimeout(() => {
+          buscarProductos(query, isMobile);
+        }, 300);
+      }
+
+      // Ocultar resultados al hacer click fuera
+      document.addEventListener("click", function (e) {
+        if (
+          searchInput &&
+          !searchInput.contains(e.target) &&
+          !searchResults.contains(e.target)
+        ) {
+          hideSearchResults(false);
+        }
+        if (
+          mobileSearchInput &&
+          !mobileSearchInput.contains(e.target) &&
+          !mobileSearchResults.contains(e.target) &&
+          !mobileSearchBtn.contains(e.target)
+        ) {
+          hideSearchResults(true);
+          // También ocultar el contenedor de búsqueda móvil
+          mobileSearch.classList.add("hidden");
+        }
+      });
+
+      function buscarProductos(query, isMobile) {
+        fetch(`/productos/buscar/?q=${encodeURIComponent(query)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (!isMobile) {
+              hideLoading();
+            }
+            mostrarResultados(data.productos, isMobile);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            if (!isMobile) {
+              hideLoading();
+            }
+            mostrarError(isMobile);
+          });
+      }
+
+      function showLoading() {
+        searchResults.classList.remove("hidden");
+        searchLoading.classList.remove("hidden");
+        searchContent.innerHTML = "";
+      }
+
+      function hideLoading() {
+        searchLoading.classList.add("hidden");
+      }
+
+      function hideSearchResults(isMobile) {
+        if (isMobile) {
+          mobileSearchResults.classList.add("hidden");
+          mobileSearchContent.innerHTML = "";
+        } else {
+          searchResults.classList.add("hidden");
+          searchContent.innerHTML = "";
+        }
+      }
+
+      function mostrarResultados(productos, isMobile) {
+        const targetContent = isMobile ? mobileSearchContent : searchContent;
+        const targetResults = isMobile ? mobileSearchResults : searchResults;
+        const currentInput = isMobile ? mobileSearchInput : searchInput;
+
+        if (productos.length === 0) {
+          targetContent.innerHTML = `
+            <div class="p-4 text-center text-gray-500">
+              <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <p>No se encontraron productos</p>
+            </div>
+          `;
+        } else {
+          const resultadosHTML = productos
+            .map(
+              (producto) => `
+            <a href="${producto.url}" class="block p-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0">
+              <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                  <img src="${producto.imagen}" alt="${producto.nombre}" 
+                       class="w-12 h-12 object-cover rounded-lg bg-gray-100">
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-900 truncate">${producto.nombre}</p>
+                  <p class="text-xs text-gray-500">${producto.categoria}</p>
+                  <p class="text-sm font-bold text-red-accent">${producto.precio_formateado}</p>
+                </div>
+                <div class="flex-shrink-0">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          `
+            )
+            .join("");
+
+          targetContent.innerHTML =
+            resultadosHTML +
+            `
+            <div class="p-3 bg-gray-50 text-center">
+              <a href="/productos/?q=${encodeURIComponent(currentInput.value)}" 
+                 class="text-blue-dark hover:text-red-accent font-semibold text-sm transition-colors">
+                Ver todos los resultados →
+              </a>
+            </div>
+          `;
+        }
+
+        targetResults.classList.remove("hidden");
+      }
+
+      function mostrarError(isMobile) {
+        const targetContent = isMobile ? mobileSearchContent : searchContent;
+        targetContent.innerHTML = `
+          <div class="p-4 text-center text-red-500">
+            <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+            <p>Error al buscar productos</p>
+          </div>
+        `;
+      }
     </script>
 
     {% block scripts %}{% endblock %}

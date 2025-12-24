@@ -1,108 +1,474 @@
 {% extends 'base.html' %} 
 {% load static %} 
+
 {% block title %}Catálogo - MotoLuxe{% endblock %} 
+
 {% block content %}
 
-<section class="mt-20 mb-16">
-  <h2
-    class="text-3xl font-heading font-bold text-blue-dark mb-10 text-center"
-  >
-    Motos Destacadas
-  </h2>
+<section class="py-8">
+  <!-- Header del Catálogo -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-heading font-bold text-blue-dark mb-3 text-center">
+      Catálogo de Productos
+    </h1>
+    <p class="text-gray-600 text-center max-w-2xl mx-auto">
+      Explora nuestra colección de motos y e-bikes de alta gama con las mejores especificaciones del mercado.
+    </p>
+  </div>
 
-  <div class="grid md:grid-cols-3 gap-8">
-<article class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl">
+  <!-- Botón de Filtros para Móvil -->
+  <div class="lg:hidden mb-6">
+    <button 
+      id="toggle-filtros-mobile"
+      class="w-full bg-blue-dark text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+      </svg>
+      <span>Mostrar Filtros</span>
+    </button>
+  </div>
+
+  <div class="grid lg:grid-cols-[280px_1fr] gap-8">
     
-    <div class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider">
-        Nuevo
-    </div>
-
-    <div class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden">
-        <img src="{% static 'images/hero.webp' %}" alt="Nombre de la Moto" 
-             class="max-w-[85%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2">
-        
-        <div class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"></div>
-    </div>
-
-    <div class="p-8 text-center">
-        <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">Nombre de la Moto</h3>
-        <div class="text-red-accent font-bold text-xl mb-6">$12,500</div>
-        
-        <button onclick="openModal('ID_DE_LA_MOTO')" 
-                class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300 cursor-pointer">
-            Ver Especificaciones
+    <!-- Panel de Filtros (Sidebar) -->
+    <aside id="panel-filtros" class="hidden lg:block bg-white rounded-lg lg:p-6 shadow-sm border border-gray-200 h-fit lg:sticky lg:top-24">
+      <div class="sticky top-0 bg-white z-10 p-6 pb-4 lg:p-0 lg:static flex items-center justify-between mb-6 border-b lg:border-0">
+        <h2 class="font-heading font-bold text-xl text-blue-dark flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filtros
+        </h2>
+        <!-- Botón Cerrar para Móvil -->
+        <button 
+          id="cerrar-filtros-mobile"
+          class="lg:hidden text-gray-500 hover:text-blue-dark transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
-    </div>
-</article>
-<article class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl">
-    
-    <div class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider">
-        Nuevo
-    </div>
+      </div>
 
-    <div class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden">
-        <img src="{% static 'images/hero1.jpg' %}" alt="Nombre de la Moto" 
-             class="max-w-[85%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2">
+      <form method="GET" action="{% url 'productos:lista' %}" id="filtros-form" class="space-y-6 px-6 pb-6 lg:px-0 lg:pb-0">
         
-        <div class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"></div>
-    </div>
+        <!-- Búsqueda por Nombre -->
+        <div>
+          <label for="busqueda" class="block text-sm font-semibold text-gray-700 mb-2">
+            Buscar Producto
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="busqueda" 
+              name="q" 
+              value="{{ request.GET.q }}"
+              placeholder="Ej: Ninja, Z900..." 
+              class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent transition-all"
+            />
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
 
-    <div class="p-8 text-center">
-        <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">Nombre de la Moto</h3>
-        <div class="text-red-accent font-bold text-xl mb-6">$15,500</div>
-        
-        <button onclick="openModal('ID_DE_LA_MOTO')" 
-                class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300 cursor-pointer">
-            Ver Especificaciones
-        </button>
-    </div>
-</article>
-<article class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl">
-    
-    <div class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider">
-        Nuevo
-    </div>
+        <!-- Filtro por Categoría -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-3">
+            Categoría
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center cursor-pointer group">
+              <input 
+                type="radio" 
+                name="categoria" 
+                value="" 
+                {% if not request.GET.categoria %}checked{% endif %}
+                class="w-4 h-4 text-blue-dark focus:ring-blue-dark cursor-pointer"
+              />
+              <span class="ml-2 text-sm text-gray-700 group-hover:text-blue-dark transition-colors">
+                Todas las categorías
+              </span>
+            </label>
+            {% for categoria in categorias %}
+            <label class="flex items-center cursor-pointer group">
+              <input 
+                type="radio" 
+                name="categoria" 
+                value="{{ categoria.id }}" 
+                {% if request.GET.categoria == categoria.id|stringformat:"s" %}checked{% endif %}
+                class="w-4 h-4 text-blue-dark focus:ring-blue-dark cursor-pointer"
+              />
+              <span class="ml-2 text-sm text-gray-700 group-hover:text-blue-dark transition-colors">
+                {{ categoria.nombre }} <span class="text-gray-400 text-xs">({{ categoria.productos.count }})</span>
+              </span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
 
-    <div class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden">
-        <img src="{% static 'images/2.jpg' %}" alt="Nombre de la Moto" 
-             class="max-w-[85%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2">
-        
-        <div class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"></div>
-    </div>
+        <!-- Filtro por Rango de Precio -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-3">
+            Rango de Precio (USD)
+          </label>
+          <div class="space-y-3">
+            <div>
+              <label for="precio_min" class="text-xs text-gray-600">Mínimo</label>
+              <input 
+                type="number" 
+                id="precio_min" 
+                name="precio_min" 
+                value="{{ request.GET.precio_min }}"
+                min="0" 
+                step="100"
+                placeholder="$0" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label for="precio_max" class="text-xs text-gray-600">Máximo</label>
+              <input 
+                type="number" 
+                id="precio_max" 
+                name="precio_max" 
+                value="{{ request.GET.precio_max }}"
+                min="0" 
+                step="100"
+                placeholder="$50,000" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
 
-    <div class="p-8 text-center">
-        <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">Nombre de la Moto</h3>
-        <div class="text-red-accent font-bold text-xl mb-6">$12,500</div>
-        
-        <button onclick="openModal('ID_DE_LA_MOTO')" 
-                class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300 cursor-pointer">
-            Ver Especificaciones
-        </button>
-    </div>
-</article>
-<article class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl">
-    
-    <div class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider">
-        Nuevo
-    </div>
+        <!-- Filtro por Disponibilidad -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-3">
+            Disponibilidad
+          </label>
+          <label class="flex items-center cursor-pointer group">
+            <input 
+              type="checkbox" 
+              name="en_stock" 
+              value="1"
+              {% if request.GET.en_stock %}checked{% endif %}
+              class="w-4 h-4 text-blue-dark focus:ring-blue-dark cursor-pointer rounded"
+            />
+            <span class="ml-2 text-sm text-gray-700 group-hover:text-blue-dark transition-colors">
+              Solo productos en stock
+            </span>
+          </label>
+        </div>
 
-    <div class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden">
-        <img src="{% static 'images/1.jpg' %}" alt="Nombre de la Moto" 
-             class="max-w-[85%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2">
-        
-        <div class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"></div>
-    </div>
+        <!-- Ordenar por -->
+        <div class="hidden lg:block">
+          <label for="ordenar" class="block text-sm font-semibold text-gray-700 mb-2">
+            Ordenar por
+          </label>
+          <select 
+            id="ordenar" 
+            name="ordenar"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent cursor-pointer"
+          >
+            <option value="">Más recientes</option>
+            <option value="precio_asc" {% if request.GET.ordenar == 'precio_asc' %}selected{% endif %}>
+              Precio: Menor a Mayor
+            </option>
+            <option value="precio_desc" {% if request.GET.ordenar == 'precio_desc' %}selected{% endif %}>
+              Precio: Mayor a Menor
+            </option>
+            <option value="nombre" {% if request.GET.ordenar == 'nombre' %}selected{% endif %}>
+              Nombre: A-Z
+            </option>
+          </select>
+        </div>
 
-    <div class="p-8 text-center">
-        <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">Nombre de la Moto</h3>
-        <div class="text-red-accent font-bold text-xl mb-6">$15,500</div>
+        <!-- Botones de Acción -->
+        <div class="mt-6 lg:pt-4 lg:border-t lg:border-gray-200">
+          <!-- Botones para móvil - fijos en bottom -->
+          <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
+            <div class="flex gap-3">
+              <button 
+                type="submit"
+                class="flex-1 bg-blue-dark text-white px-4 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all hover:shadow-lg text-base"
+              >
+                Aplicar Filtros
+              </button>
+              <a 
+                href="{% url 'productos:lista' %}"
+                class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all text-base flex items-center justify-center"
+              >
+                Limpiar
+              </a>
+            </div>
+          </div>
+          
+          <!-- Botones para desktop - normales -->
+          <div class="hidden lg:flex gap-2">
+            <button 
+              type="submit"
+              class="flex-1 bg-blue-dark text-white px-4 py-2.5 rounded-lg font-semibold hover:bg-opacity-90 transition-all hover:shadow-lg text-base"
+            >
+              Aplicar Filtros
+            </button>
+            <a 
+              href="{% url 'productos:lista' %}"
+              class="px-4 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all text-base flex items-center justify-center"
+            >
+              Limpiar
+            </a>
+          </div>
+          
+          <!-- Espaciador para móvil para que el contenido no se oculte detrás de los botones fijos -->
+          <div class="lg:hidden h-20"></div>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Grid de Productos -->
+    <div>
+      
+      <!-- Ordenar por en Móvil -->
+      <div class="lg:hidden mb-4">
+        <form method="GET" action="{% url 'productos:lista' %}" class="flex items-center gap-3">
+          <!-- Mantener otros parámetros -->
+          <input type="hidden" name="q" value="{{ request.GET.q }}">
+          <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
+          <input type="hidden" name="precio_min" value="{{ request.GET.precio_min }}">
+          <input type="hidden" name="precio_max" value="{{ request.GET.precio_max }}">
+          <input type="hidden" name="en_stock" value="{{ request.GET.en_stock }}">
+          
+          <label for="ordenar-mobile" class="text-sm font-semibold text-gray-700 whitespace-nowrap">
+            Ordenar:
+          </label>
+          <select 
+            id="ordenar-mobile" 
+            name="ordenar"
+            onchange="this.form.submit()"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent cursor-pointer text-sm"
+          >
+            <option value="">Más recientes</option>
+            <option value="precio_asc" {% if request.GET.ordenar == 'precio_asc' %}selected{% endif %}>
+              Precio: Menor a Mayor
+            </option>
+            <option value="precio_desc" {% if request.GET.ordenar == 'precio_desc' %}selected{% endif %}>
+              Precio: Mayor a Menor
+            </option>
+            <option value="nombre" {% if request.GET.ordenar == 'nombre' %}selected{% endif %}>
+              Nombre: A-Z
+            </option>
+          </select>
+        </form>
+      </div>
+      
+      <!-- Barra de Resultados -->
+      <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+        <div class="text-gray-600">
+          <span class="font-semibold text-blue-dark">{{ productos|length }}</span> 
+          producto{{ productos|length|pluralize }} encontrado{{ productos|length|pluralize }}
+          {% if request.GET.q %}
+            para "<span class="font-semibold text-blue-dark">{{ request.GET.q }}</span>"
+          {% endif %}
+        </div>
+
+        <!-- Filtros Activos (Tags) -->
+        {% if request.GET.categoria or request.GET.precio_min or request.GET.precio_max or request.GET.en_stock %}
+        <div class="flex flex-wrap gap-2">
+          {% if categoria_seleccionada %}
+          <span class="inline-flex items-center gap-1 bg-blue-dark/10 text-blue-dark px-3 py-1 rounded-full text-xs font-semibold">
+            {{ categoria_seleccionada.nombre }}
+            <a href="?q={{ request.GET.q }}&precio_min={{ request.GET.precio_min }}&precio_max={{ request.GET.precio_max }}&ordenar={{ request.GET.ordenar }}" class="hover:text-red-accent">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </span>
+          {% endif %}
+          {% if request.GET.precio_min or request.GET.precio_max %}
+          <span class="inline-flex items-center gap-1 bg-red-accent/10 text-red-accent px-3 py-1 rounded-full text-xs font-semibold">
+            ${{ request.GET.precio_min|default:"0" }} - ${{ request.GET.precio_max|default:"∞" }}
+            <a href="?q={{ request.GET.q }}&categoria={{ request.GET.categoria }}&ordenar={{ request.GET.ordenar }}" class="hover:text-red-accent">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </span>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% for producto in productos %}
+        <article
+          class="group relative bg-white rounded-lg overflow-hidden border border-gray-200 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+        >
+          <!-- Badge de Estado -->
+          <div class="absolute top-4 right-4 z-30 flex flex-col gap-2">
+            <span class="bg-blue-dark text-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider shadow-lg">
+              Nuevo
+            </span>
+            {% if not producto.en_stock %}
+            <span class="bg-red-accent text-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider shadow-lg">
+              Agotado
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Imagen del Producto -->
+          <div class="bg-gradient-to-br from-gray-50 to-gray-100 h-[280px] flex items-center justify-center relative overflow-hidden">
+            {% if producto.imagen_principal %}
+            <img
+              src="{{ producto.imagen_principal.url }}"
+              alt="{{ producto.nombre }}"
+              class="max-w-[70%] max-h-[90%] object-contain z-20 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+            />
+            {% else %}
+            <img
+              src="{% static 'images/hero.webp' %}"
+              alt="{{ producto.nombre }}"
+              class="max-w-[70%] max-h-[90%] object-contain z-20 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+            />
+            {% endif %}
+            
+            <!-- Sombra decorativa -->
+            <div class="absolute bottom-8 w-[65%] h-[20px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.15)_0%,_transparent_70%)] rounded-full z-10"></div>
+          </div>
+
+          <!-- Información del Producto -->
+          <div class="p-6 space-y-4">
+            
+            <!-- Categoría -->
+            <div class="text-red-accent text-xs font-bold uppercase tracking-wider">
+              {{ producto.categoria.nombre }}
+            </div>
+
+            <!-- Nombre -->
+            <h3 class="font-heading font-bold text-xl text-blue-dark leading-tight min-h-[3.5rem] line-clamp-2">
+              {{ producto.nombre }}
+            </h3>
+
+            <!-- Stock Info -->
+            <div class="flex items-center gap-2 text-sm">
+              {% if producto.en_stock %}
+              <span class="flex items-center gap-1 text-green-600 font-semibold">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                En Stock ({{ producto.stock_actual }})
+              </span>
+              {% else %}
+              <span class="flex items-center gap-1 text-gray-400 font-semibold">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                Sin Stock
+              </span>
+              {% endif %}
+            </div>
+
+            <!-- Precio -->
+            <div class="pt-2 border-t border-gray-100">
+              <div class="text-3xl font-bold text-red-accent mb-4">
+                {{ producto.precio_formateado }}
+              </div>
+
+              <!-- Botón de Acción -->
+              <a
+                href="{% url 'productos:detalle' producto.id %}"
+                class="block text-center border-2 border-blue-dark text-blue-dark px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-all duration-300 rounded"
+              >
+                Ver Detalles
+              </a>
+            </div>
+          </div>
+        </article>
         
-        <button onclick="openModal('ID_DE_LA_MOTO')" 
-                class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300 cursor-pointer">
-            Ver Especificaciones
-        </button>
+        {% empty %}
+        
+        <!-- Estado Vacío -->
+        <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+          <svg class="w-24 h-24 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-2xl font-heading font-bold text-gray-700 mb-2">
+            No se encontraron productos
+          </h3>
+          <p class="text-gray-500 mb-6 max-w-md">
+            No hay productos que coincidan con los filtros seleccionados. 
+            Intenta ajustar tu búsqueda o limpiar los filtros.
+          </p>
+          <a 
+            href="{% url 'productos:lista' %}"
+            class="inline-flex items-center gap-2 bg-blue-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Ver todos los productos
+          </a>
+        </div>
+        
+        {% endfor %}
+      </div>
     </div>
-</article>
   </div>
 </section>
-{% endblock%}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Prevenir submit en Enter del campo de búsqueda para mejor UX
+  document.getElementById('busqueda').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const form = document.getElementById('filtros-form');
+      form.submit();
+    }
+  });
+
+  // Toggle de filtros en móvil
+  const toggleBtn = document.getElementById('toggle-filtros-mobile');
+  const cerrarBtn = document.getElementById('cerrar-filtros-mobile');
+  const panelFiltros = document.getElementById('panel-filtros');
+
+  if (toggleBtn && panelFiltros) {
+    toggleBtn.addEventListener('click', () => {
+      panelFiltros.classList.remove('hidden');
+      panelFiltros.classList.add('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto', 'bg-white');
+      document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+    });
+  }
+
+  if (cerrarBtn && panelFiltros) {
+    cerrarBtn.addEventListener('click', () => {
+      panelFiltros.classList.add('hidden');
+      panelFiltros.classList.remove('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto');
+      document.body.style.overflow = ''; // Restaurar scroll del body
+    });
+  }
+
+  // Cerrar filtros después de aplicar en móvil
+  const form = document.getElementById('filtros-form');
+  const applyButton = form.querySelector('button[type="submit"]');
+  
+  if (applyButton) {
+    applyButton.addEventListener('click', () => {
+      // Cerrar el panel de filtros en móvil después de aplicar
+      if (window.innerWidth < 1024) {
+        setTimeout(() => {
+          if (panelFiltros) {
+            panelFiltros.classList.add('hidden');
+            panelFiltros.classList.remove('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto');
+            document.body.style.overflow = '';
+          }
+        }, 100);
+      }
+    });
+  }
+</script>
+{% endblock %}
