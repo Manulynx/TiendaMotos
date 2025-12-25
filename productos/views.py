@@ -1,10 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Producto, Categoria, ImagenProducto, AtributoDinamico, ValorProducto
 import json
 
@@ -141,7 +144,38 @@ def buscar_productos(request):
     
     return JsonResponse({'productos': resultados})
 
-#@staff_member_required
+def admin_login(request):
+    """Vista de login personalizada para el panel de administración"""
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect('productos:admin_dashboard')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            if user.is_staff:
+                login(request, user)
+                next_url = request.GET.get('next', 'productos:admin_dashboard')
+                return redirect(next_url)
+            else:
+                messages.error(request, 'No tienes permisos de administrador')
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos')
+    
+    return render(request, 'admin_custom/login.html')
+
+
+def admin_logout(request):
+    """Cerrar sesión del panel de administración"""
+    logout(request)
+    messages.success(request, 'Sesión cerrada exitosamente')
+    return redirect('home')
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_dashboard(request):
     """Dashboard principal del panel de administración"""
     total_productos = Producto.objects.count()
@@ -161,7 +195,7 @@ def admin_dashboard(request):
     return render(request, 'admin_custom/dashboard.html', context)
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_productos_lista(request):
     """Lista de productos con filtros y búsqueda"""
     productos = Producto.objects.select_related('categoria').order_by('-fecha_creacion')
@@ -202,7 +236,7 @@ def admin_productos_lista(request):
     return render(request, 'admin_custom/productos_lista.html', context)
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_producto_crear(request):
     """Crear nuevo producto"""
     if request.method == 'POST':
@@ -237,7 +271,7 @@ def admin_producto_crear(request):
     return render(request, 'admin_custom/producto_crear.html', context)
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_producto_editar(request, producto_id):
     """Editar producto existente"""
     producto = get_object_or_404(Producto, id=producto_id)
@@ -275,7 +309,7 @@ def admin_producto_editar(request, producto_id):
     return render(request, 'admin_custom/producto_editar.html', context)
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_producto_toggle_estado(request, producto_id):
     """Toggle del estado activo/inactivo del producto (AJAX)"""
@@ -290,7 +324,7 @@ def admin_producto_toggle_estado(request, producto_id):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_producto_eliminar(request, producto_id):
     """Eliminar producto (AJAX)"""
@@ -304,7 +338,7 @@ def admin_producto_eliminar(request, producto_id):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_imagen_subir(request, producto_id):
     """Subir imagen a la galería del producto (AJAX)"""
@@ -335,7 +369,7 @@ def admin_imagen_subir(request, producto_id):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_imagen_eliminar(request, imagen_id):
     """Eliminar imagen de la galería (AJAX)"""
@@ -348,7 +382,7 @@ def admin_imagen_eliminar(request, imagen_id):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_categorias_lista(request):
     """Lista de categorías"""
     categorias = Categoria.objects.prefetch_related('productos').order_by('nombre')
@@ -357,7 +391,7 @@ def admin_categorias_lista(request):
     return render(request, 'admin_custom/categorias_lista.html', context)
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_categoria_crear(request):
     """Crear categoría (AJAX)"""
@@ -382,7 +416,7 @@ def admin_categoria_crear(request):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_categoria_editar(request, categoria_id):
     """Editar categoría (AJAX)"""
@@ -400,7 +434,7 @@ def admin_categoria_editar(request, categoria_id):
     })
 
 
-#@staff_member_required
+@staff_member_required(login_url='/productos/admin-custom/login/')
 @require_POST
 def admin_categoria_eliminar(request, categoria_id):
     """Eliminar categoría (AJAX)"""

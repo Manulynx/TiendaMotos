@@ -8,6 +8,10 @@ urlpatterns = [
     path('<int:producto_id>/', views.detalle, name='detalle'),
     path('buscar/', views.buscar_productos, name='buscar'),
     
+    # Auth URLs
+    path('admin-custom/login/', views.admin_login, name='admin_login'),
+    path('admin-custom/logout/', views.admin_logout, name='admin_logout'),
+    
     # Admin Custom URLs
     path('admin-custom/', views.admin_dashboard, name='admin_dashboard'),
     path('admin-custom/productos/', views.admin_productos_lista, name='admin_productos_lista'),

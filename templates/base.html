@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Mi Sitio Web{% endblock %}</title>
+    <title>{% block title %}MotosLuxe{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -175,7 +175,7 @@
           </div>
         </div>
 
-        <!-- Navegación -->
+        <!-- Navegación Desktop -->
         <nav class="hidden lg:block">
           <ul class="flex gap-12 list-none">
             <li>
@@ -206,7 +206,7 @@
                 >TRICICLOS</a
               >
             </li>
-            <!--{% if user.is_staff %} -->
+            
             <li>
               <a
                 href="{% url 'productos:admin_dashboard' %}"
@@ -234,7 +234,7 @@
                 ADMIN
               </a>
             </li>
-            {% endif %}
+            
           </ul>
         </nav>
 
@@ -242,7 +242,7 @@
         <nav>
           <ul
             id="nav-menu"
-            class="hidden lg:hidden flex-col gap-8 list-none absolute top-0 left-0 w-full h-screen bg-blue-dark items-center justify-center transition-all duration-300 z-40"
+            class="hidden flex-col gap-8 list-none absolute top-0 left-0 w-full h-screen bg-blue-dark items-center justify-center transition-all duration-300 z-40 lg:hidden"
           >
             <li>
               <a
@@ -272,7 +272,7 @@
                 >TRICICLOS</a
               >
             </li>
-            {% if user.is_staff %}
+            
             <li>
               <a
                 href="{% url 'productos:admin_dashboard' %}"
@@ -300,7 +300,7 @@
                 ADMINISTRACIÓN
               </a>
             </li>
-            {% endif %}
+            
           </ul>
         </nav>
       </div>
