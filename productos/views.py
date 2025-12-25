@@ -141,7 +141,7 @@ def buscar_productos(request):
     
     return JsonResponse({'productos': resultados})
 
-@staff_member_required
+#@staff_member_required
 def admin_dashboard(request):
     """Dashboard principal del panel de administración"""
     total_productos = Producto.objects.count()
@@ -161,7 +161,7 @@ def admin_dashboard(request):
     return render(request, 'admin_custom/dashboard.html', context)
 
 
-@staff_member_required
+#@staff_member_required
 def admin_productos_lista(request):
     """Lista de productos con filtros y búsqueda"""
     productos = Producto.objects.select_related('categoria').order_by('-fecha_creacion')
@@ -202,7 +202,7 @@ def admin_productos_lista(request):
     return render(request, 'admin_custom/productos_lista.html', context)
 
 
-@staff_member_required
+#@staff_member_required
 def admin_producto_crear(request):
     """Crear nuevo producto"""
     if request.method == 'POST':
@@ -237,7 +237,7 @@ def admin_producto_crear(request):
     return render(request, 'admin_custom/producto_crear.html', context)
 
 
-@staff_member_required
+#@staff_member_required
 def admin_producto_editar(request, producto_id):
     """Editar producto existente"""
     producto = get_object_or_404(Producto, id=producto_id)
@@ -275,7 +275,7 @@ def admin_producto_editar(request, producto_id):
     return render(request, 'admin_custom/producto_editar.html', context)
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_producto_toggle_estado(request, producto_id):
     """Toggle del estado activo/inactivo del producto (AJAX)"""
@@ -290,7 +290,7 @@ def admin_producto_toggle_estado(request, producto_id):
     })
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_producto_eliminar(request, producto_id):
     """Eliminar producto (AJAX)"""
@@ -304,7 +304,7 @@ def admin_producto_eliminar(request, producto_id):
     })
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_imagen_subir(request, producto_id):
     """Subir imagen a la galería del producto (AJAX)"""
@@ -335,7 +335,7 @@ def admin_imagen_subir(request, producto_id):
     })
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_imagen_eliminar(request, imagen_id):
     """Eliminar imagen de la galería (AJAX)"""
@@ -348,7 +348,7 @@ def admin_imagen_eliminar(request, imagen_id):
     })
 
 
-@staff_member_required
+#@staff_member_required
 def admin_categorias_lista(request):
     """Lista de categorías"""
     categorias = Categoria.objects.prefetch_related('productos').order_by('nombre')
@@ -357,7 +357,7 @@ def admin_categorias_lista(request):
     return render(request, 'admin_custom/categorias_lista.html', context)
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_categoria_crear(request):
     """Crear categoría (AJAX)"""
@@ -382,7 +382,7 @@ def admin_categoria_crear(request):
     })
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_categoria_editar(request, categoria_id):
     """Editar categoría (AJAX)"""
@@ -400,7 +400,7 @@ def admin_categoria_editar(request, categoria_id):
     })
 
 
-@staff_member_required
+#@staff_member_required
 @require_POST
 def admin_categoria_eliminar(request, categoria_id):
     """Eliminar categoría (AJAX)"""
