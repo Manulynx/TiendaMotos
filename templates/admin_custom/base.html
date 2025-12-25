@@ -47,6 +47,19 @@
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
       }
 
+      /* Mobile Sidebar */
+      .sidebar-mobile {
+        transform: translateX(-100%);
+      }
+      .sidebar-mobile.active {
+        transform: translateX(0);
+      }
+      @media (min-width: 768px) {
+        .sidebar-mobile {
+          transform: translateX(0);
+        }
+      }
+
       /* Toggle Switch */
       .toggle-checkbox:checked {
         right: 0;
@@ -86,11 +99,17 @@
     {% block extra_css %}{% endblock %}
   </head>
   <body class="bg-gray-50 font-sans">
+    <!-- Overlay para mobile -->
+    <div
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"
+    ></div>
+
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
       <aside
         id="sidebar"
-        class="w-64 bg-admin-sidebar text-white flex-shrink-0 sidebar-transition overflow-y-auto"
+        class="fixed md:relative w-64 bg-admin-sidebar text-white flex-shrink-0 sidebar-transition sidebar-mobile overflow-y-auto h-full z-40"
       >
         <div class="p-6">
           <div class="flex items-center gap-3 mb-8">
@@ -245,23 +264,47 @@
       </aside>
 
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col overflow-hidden">
+      <div class="flex-1 flex flex-col overflow-hidden w-full">
         <!-- Top Header -->
-        <header class="bg-white border-b border-gray-200 px-8 py-4">
+        <header
+          class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4"
+        >
           <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-2xl font-heading font-bold text-blue-dark">
+            <!-- Hamburger Menu (Mobile) -->
+            <button
+              id="mobile-menu-btn"
+              class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <svg
+                class="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+
+            <div class="flex-1 md:flex-none">
+              <h2
+                class="text-lg md:text-2xl font-heading font-bold text-blue-dark"
+              >
                 {% block page_title %}Dashboard{% endblock %}
               </h2>
-              <p class="text-sm text-gray-500 mt-1">
+              <p class="text-xs md:text-sm text-gray-500 mt-1 hidden sm:block">
                 {% block page_subtitle %}Gestión de inventario{% endblock %}
               </p>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 md:gap-4">
               <!-- Notificaciones -->
               <button
-                class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors hidden sm:block"
               >
                 <svg
                   class="w-6 h-6 text-gray-600"
@@ -283,18 +326,18 @@
 
               <!-- Usuario -->
               <div
-                class="flex items-center gap-3 border-l border-gray-200 pl-4"
+                class="flex items-center gap-2 md:gap-3 border-l border-gray-200 pl-2 md:pl-4"
               >
-                <div class="text-right">
+                <div class="text-right hidden md:block">
                   <p class="text-sm font-semibold text-gray-800">
                     {{ user.username }}
                   </p>
                   <p class="text-xs text-gray-500">Administrador</p>
                 </div>
                 <div
-                  class="w-10 h-10 bg-blue-dark rounded-full flex items-center justify-center"
+                  class="w-8 h-8 md:w-10 md:h-10 bg-blue-dark rounded-full flex items-center justify-center"
                 >
-                  <span class="text-white font-bold"
+                  <span class="text-white font-bold text-sm"
                     >{{ user.username|slice:":1"|upper }}</span
                   >
                 </div>
@@ -304,7 +347,7 @@
         </header>
 
         <!-- Content Area -->
-        <main class="flex-1 overflow-y-auto p-8">
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
           {% block content %}{% endblock %}
         </main>
       </div>
@@ -312,6 +355,28 @@
 
     <!-- Toast Notifications -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Botón Scroll to Top -->
+    <button
+      id="scroll-to-top-admin"
+      class="fixed bottom-6 right-6 bg-red-accent hover:bg-red-accent/90 text-white rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 invisible z-50"
+      style="transform: translateY(100px)"
+      title="Volver arriba"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
+      </svg>
+    </button>
 
     <script>
       // Toast Notification System
@@ -377,6 +442,66 @@
       }
 
       const csrftoken = getCookie("csrftoken");
+
+      // Mobile Menu Toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebar-overlay");
+
+      function toggleMobileMenu() {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("hidden");
+        document.body.classList.toggle("overflow-hidden");
+      }
+
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+      }
+
+      if (overlay) {
+        overlay.addEventListener("click", toggleMobileMenu);
+      }
+
+      // Cerrar menú al hacer click en un link (mobile)
+      if (window.innerWidth < 768) {
+        const sidebarLinks = sidebar.querySelectorAll("a");
+        sidebarLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            if (sidebar.classList.contains("active")) {
+              toggleMobileMenu();
+            }
+          });
+        });
+      }
+
+      // Botón Scroll to Top
+      const scrollToTopBtnAdmin = document.getElementById(
+        "scroll-to-top-admin"
+      );
+      const mainContent = document.querySelector("main");
+
+      if (mainContent && scrollToTopBtnAdmin) {
+        // Detectar scroll en el contenedor main
+        mainContent.addEventListener("scroll", function () {
+          if (mainContent.scrollTop > 300) {
+            scrollToTopBtnAdmin.style.opacity = "1";
+            scrollToTopBtnAdmin.style.visibility = "visible";
+            scrollToTopBtnAdmin.style.transform = "translateY(0)";
+          } else {
+            scrollToTopBtnAdmin.style.opacity = "0";
+            scrollToTopBtnAdmin.style.visibility = "invisible";
+            scrollToTopBtnAdmin.style.transform = "translateY(100px)";
+          }
+        });
+
+        // Scroll suave al top al hacer clic
+        scrollToTopBtnAdmin.addEventListener("click", function () {
+          mainContent.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        });
+      }
     </script>
 
     {% block extra_js %}{% endblock %}

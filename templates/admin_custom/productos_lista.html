@@ -6,21 +6,21 @@
 
 {% block content %}
 <!-- Filtros y Búsqueda -->
-<div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
-  <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4" id="filter-form">
+<div class="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-4 md:mb-6 border border-gray-100">
+  <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4" id="filter-form">
     <!-- Búsqueda -->
     <div class="md:col-span-2">
-      <label class="block text-sm font-medium text-gray-700 mb-2">Buscar producto</label>
+      <label class="block text-xs md:text-sm font-medium text-gray-700 mb-2">Buscar producto</label>
       <input type="text" name="q" value="{{ query }}" 
              placeholder="Nombre o SKU..."
-             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
+             class="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
     </div>
     
     <!-- Categoría -->
     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+      <label class="block text-xs md:text-sm font-medium text-gray-700 mb-2">Categoría</label>
       <select name="categoria" 
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
+              class="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
         <option value="">Todas</option>
         {% for cat in categorias %}
           <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == categoria_seleccionada %}selected{% endif %}>
@@ -32,9 +32,9 @@
     
     <!-- Estado -->
     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+      <label class="block text-xs md:text-sm font-medium text-gray-700 mb-2">Estado</label>
       <select name="estado" 
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
+              class="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all">
         <option value="">Todos</option>
         <option value="activo" {% if estado_seleccionado == 'activo' %}selected{% endif %}>Activos</option>
         <option value="inactivo" {% if estado_seleccionado == 'inactivo' %}selected{% endif %}>Inactivos</option>
@@ -42,83 +42,84 @@
     </div>
     
     <!-- Botones -->
-    <div class="md:col-span-4 flex gap-3">
+    <div class="md:col-span-4 flex flex-col sm:flex-row gap-2 md:gap-3">
       <button type="submit" 
-              class="px-6 py-2.5 bg-blue-dark text-white rounded-lg hover:bg-opacity-90 transition-all font-medium flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              class="px-4 md:px-6 py-2 md:py-2.5 text-sm bg-blue-dark text-white rounded-lg hover:bg-opacity-90 transition-all font-medium flex items-center justify-center gap-2">
+        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
         Buscar
       </button>
       
       <a href="{% url 'productos:admin_productos_lista' %}" 
-         class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all font-medium">
+         class="px-4 md:px-6 py-2 md:py-2.5 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all font-medium text-center">
         Limpiar
       </a>
       
       <a href="{% url 'productos:admin_producto_crear' %}" 
-         class="ml-auto px-6 py-2.5 bg-red-accent text-white rounded-lg hover:bg-opacity-90 transition-all font-medium flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+         class="sm:ml-auto px-4 md:px-6 py-2 md:py-2.5 text-sm bg-red-accent text-white rounded-lg hover:bg-opacity-90 transition-all font-medium flex items-center justify-center gap-2">
+        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Nuevo Producto
+        <span class="hidden sm:inline">Nuevo Producto</span>
+        <span class="sm:hidden">Nuevo</span>
       </a>
     </div>
   </form>
 </div>
 
 <!-- Grid de Productos -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
   {% for producto in page_obj %}
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden card-hover" data-producto-id="{{ producto.id }}">
     <!-- Imagen -->
-    <div class="relative bg-gray-100 h-48 overflow-hidden group">
+    <div class="relative bg-gray-100 h-40 md:h-48 overflow-hidden group">
       {% if producto.imagen_principal %}
         <img src="{{ producto.imagen_principal.url }}" alt="{{ producto.nombre }}" 
              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
       {% else %}
         <div class="w-full h-full flex items-center justify-center text-gray-400">
-          <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
         </div>
       {% endif %}
       
       <!-- Toggle de Estado -->
-      <div class="absolute top-3 right-3">
+      <div class="absolute top-2 md:top-3 right-2 md:right-3">
         <button onclick="toggleEstado({{ producto.id }})" 
-                class="toggle-estado px-3 py-1.5 rounded-full text-xs font-bold shadow-lg transition-all {% if producto.es_activo %}bg-green-500 hover:bg-green-600{% else %}bg-gray-400 hover:bg-gray-500{% endif %} text-white">
+                class="toggle-estado px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs font-bold shadow-lg transition-all {% if producto.es_activo %}bg-green-500 hover:bg-green-600{% else %}bg-gray-400 hover:bg-gray-500{% endif %} text-white">
           {% if producto.es_activo %}ACTIVO{% else %}INACTIVO{% endif %}
         </button>
       </div>
     </div>
     
     <!-- Contenido -->
-    <div class="p-4">
-      <div class="mb-3">
+    <div class="p-3 md:p-4">
+      <div class="mb-2 md:mb-3">
         <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded">
           {{ producto.categoria.nombre }}
         </span>
       </div>
       
-      <h3 class="font-bold text-gray-900 mb-1 line-clamp-2 min-h-[3rem]">{{ producto.nombre }}</h3>
+      <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 line-clamp-2 min-h-[2.5rem] md:min-h-[3rem]">{{ producto.nombre }}</h3>
       <p class="text-xs text-gray-500 mb-2">SKU: {{ producto.sku }}</p>
       
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-lg font-bold text-red-accent">{{ producto.precio_formateado }}</span>
-        <span class="text-sm text-gray-600">Stock: {{ producto.stock_actual }}</span>
+      <div class="flex items-center justify-between mb-3 md:mb-4">
+        <span class="text-base md:text-lg font-bold text-red-accent">{{ producto.precio_formateado }}</span>
+        <span class="text-xs md:text-sm text-gray-600">Stock: {{ producto.stock_actual }}</span>
       </div>
       
       <!-- Acciones -->
       <div class="flex gap-2">
         <a href="{% url 'productos:admin_producto_editar' producto.id %}" 
-           class="flex-1 px-4 py-2 bg-blue-dark text-white text-center rounded-lg hover:bg-opacity-90 transition-all text-sm font-medium">
+           class="flex-1 px-3 md:px-4 py-2 bg-blue-dark text-white text-center rounded-lg hover:bg-opacity-90 transition-all text-xs md:text-sm font-medium">
           Editar
         </a>
         
         <button onclick="eliminarProducto({{ producto.id }}, '{{ producto.nombre|escapejs }}')" 
-                class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="px-3 md:px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all">
+          <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
           </svg>
         </button>

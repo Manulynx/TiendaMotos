@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
+from django.urls import reverse
 from .models import Producto, Categoria, ImagenProducto, AtributoDinamico, ValorProducto
 import json
 
@@ -228,7 +229,7 @@ def admin_producto_crear(request):
         return JsonResponse({
             'success': True,
             'message': 'Producto creado exitosamente',
-            'redirect': f'/admin-custom/productos/{producto.id}/editar/'
+            'redirect': reverse('productos:admin_producto_editar', kwargs={'producto_id': producto.id})
         })
     
     categorias = Categoria.objects.all()

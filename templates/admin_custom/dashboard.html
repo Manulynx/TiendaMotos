@@ -2,21 +2,27 @@
 {% block page_title %}Dashboard{% endblock %} {% block page_subtitle %}Resumen
 general del inventario{% endblock %} {% block content %}
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
+>
   <!-- Total Productos -->
   <div
-    class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 card-hover"
+    class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 card-hover"
   >
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm text-gray-500 font-medium mb-1">Total Productos</p>
-        <h3 class="text-3xl font-bold text-blue-dark">{{ total_productos }}</h3>
+        <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
+          Total Productos
+        </p>
+        <h3 class="text-2xl md:text-3xl font-bold text-blue-dark">
+          {{ total_productos }}
+        </h3>
       </div>
       <div
-        class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-blue-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-7 h-7 text-blue-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-blue-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -34,20 +40,22 @@ general del inventario{% endblock %} {% block content %}
 
   <!-- Productos Activos -->
   <div
-    class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 card-hover"
+    class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 card-hover"
   >
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm text-gray-500 font-medium mb-1">Productos Activos</p>
-        <h3 class="text-3xl font-bold text-green-600">
+        <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
+          Productos Activos
+        </p>
+        <h3 class="text-2xl md:text-3xl font-bold text-green-600">
           {{ productos_activos }}
         </h3>
       </div>
       <div
-        class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-green-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-7 h-7 text-green-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-green-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -65,20 +73,22 @@ general del inventario{% endblock %} {% block content %}
 
   <!-- Categorías -->
   <div
-    class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 card-hover"
+    class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 card-hover"
   >
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm text-gray-500 font-medium mb-1">Categorías</p>
-        <h3 class="text-3xl font-bold text-purple-600">
-          {{ categorias_count }}
+        <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
+          Categorías
+        </p>
+        <h3 class="text-2xl md:text-3xl font-bold text-purple-600">
+          {{ total_categorias }}
         </h3>
       </div>
       <div
-        class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-purple-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-7 h-7 text-purple-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-purple-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -96,20 +106,22 @@ general del inventario{% endblock %} {% block content %}
 
   <!-- Sin Stock -->
   <div
-    class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 card-hover"
+    class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 card-hover"
   >
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm text-gray-500 font-medium mb-1">Sin Stock</p>
-        <h3 class="text-3xl font-bold text-red-accent">
+        <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
+          Sin Stock
+        </p>
+        <h3 class="text-2xl md:text-3xl font-bold text-red-accent">
           {{ productos_sin_stock }}
         </h3>
       </div>
       <div
-        class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-red-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-7 h-7 text-red-accent"
+          class="w-6 h-6 md:w-7 md:h-7 text-red-accent"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -127,21 +139,23 @@ general del inventario{% endblock %} {% block content %}
 </div>
 
 <!-- Quick Actions & Recent Products -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
   <!-- Quick Actions -->
-  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-    <h3 class="text-lg font-bold text-blue-dark mb-4">Acciones Rápidas</h3>
+  <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100">
+    <h3 class="text-base md:text-lg font-bold text-blue-dark mb-3 md:mb-4">
+      Acciones Rápidas
+    </h3>
 
-    <div class="space-y-3">
+    <div class="space-y-2 md:space-y-3">
       <a
         href="{% url 'productos:admin_producto_crear' %}"
-        class="flex items-center gap-3 p-4 bg-gradient-to-r from-red-accent to-red-600 text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-red-accent to-red-600 text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
-          class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
         >
           <svg
-            class="w-6 h-6"
+            class="w-5 h-5 md:w-6 md:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -155,20 +169,22 @@ general del inventario{% endblock %} {% block content %}
           </svg>
         </div>
         <div>
-          <p class="font-semibold">Nuevo Producto</p>
-          <p class="text-xs text-white/80">Agregar al inventario</p>
+          <p class="font-semibold text-sm md:text-base">Nuevo Producto</p>
+          <p class="text-xs text-white/80 hidden sm:block">
+            Agregar al inventario
+          </p>
         </div>
       </a>
 
       <a
         href="{% url 'productos:admin_productos_lista' %}"
-        class="flex items-center gap-3 p-4 bg-blue-dark text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-blue-dark text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
-          class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
         >
           <svg
-            class="w-6 h-6"
+            class="w-5 h-5 md:w-6 md:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -182,20 +198,22 @@ general del inventario{% endblock %} {% block content %}
           </svg>
         </div>
         <div>
-          <p class="font-semibold">Ver Productos</p>
-          <p class="text-xs text-white/70">Gestionar inventario</p>
+          <p class="font-semibold text-sm md:text-base">Ver Productos</p>
+          <p class="text-xs text-white/70 hidden sm:block">
+            Gestionar inventario
+          </p>
         </div>
       </a>
 
       <a
         href="{% url 'productos:admin_categorias_lista' %}"
-        class="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
-          class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
         >
           <svg
-            class="w-6 h-6"
+            class="w-5 h-5 md:w-6 md:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -209,8 +227,10 @@ general del inventario{% endblock %} {% block content %}
           </svg>
         </div>
         <div>
-          <p class="font-semibold">Categorías</p>
-          <p class="text-xs text-white/80">Organizar productos</p>
+          <p class="font-semibold text-sm md:text-base">Categorías</p>
+          <p class="text-xs text-white/80 hidden sm:block">
+            Organizar productos
+          </p>
         </div>
       </a>
     </div>
@@ -220,16 +240,18 @@ general del inventario{% endblock %} {% block content %}
   <div
     class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100"
   >
-    <div class="p-6 border-b border-gray-100">
-      <h3 class="text-lg font-bold text-blue-dark">Productos Recientes</h3>
+    <div class="p-4 md:p-6 border-b border-gray-100">
+      <h3 class="text-base md:text-lg font-bold text-blue-dark">
+        Productos Recientes
+      </h3>
     </div>
 
     <div class="divide-y divide-gray-100">
       {% for producto in productos_recientes %}
-      <div class="p-4 hover:bg-gray-50 transition-colors">
-        <div class="flex items-center gap-4">
+      <div class="p-3 md:p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-3 md:gap-4">
           <div
-            class="w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden"
+            class="w-12 h-12 md:w-16 md:h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden"
           >
             {% if producto.imagen_principal %}
             <img
@@ -242,7 +264,7 @@ general del inventario{% endblock %} {% block content %}
               class="w-full h-full flex items-center justify-center text-gray-400"
             >
               <svg
-                class="w-8 h-8"
+                class="w-6 h-6 md:w-8 md:h-8"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -259,25 +281,34 @@ general del inventario{% endblock %} {% block content %}
           </div>
 
           <div class="flex-1 min-w-0">
-            <h4 class="font-semibold text-gray-900 truncate">
+            <h4
+              class="font-semibold text-sm md:text-base text-gray-900 truncate"
+            >
               {{ producto.nombre }}
             </h4>
-            <p class="text-sm text-gray-500">{{ producto.categoria.nombre }}</p>
-            <p class="text-sm font-bold text-red-accent mt-1">
+            <p class="text-xs md:text-sm text-gray-500">
+              {{ producto.categoria.nombre }}
+            </p>
+            <p class="text-xs md:text-sm font-bold text-red-accent mt-1">
               {{ producto.precio_formateado }}
             </p>
           </div>
 
           <div class="flex items-center gap-2">
             <span
-              class="px-3 py-1 rounded-full text-xs font-medium {% if producto.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}"
+              class="px-2 md:px-3 py-1 rounded-full text-xs font-medium {% if producto.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}"
             >
-              {% if producto.es_activo %}Activo{% else %}Inactivo{% endif %}
+              {% if producto.es_activo %}<span class="hidden sm:inline"
+                >Activo</span
+              ><span class="sm:hidden">✓</span>{% else %}<span
+                class="hidden sm:inline"
+                >Inactivo</span
+              ><span class="sm:hidden">✕</span>{% endif %}
             </span>
 
             <a
               href="{% url 'productos:admin_producto_editar' producto.id %}"
-              class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              class="p-1.5 md:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             >
               <svg
                 class="w-5 h-5"

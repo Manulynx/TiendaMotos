@@ -374,6 +374,28 @@
       </div>
     </footer>
 
+    <!-- Botón Scroll to Top -->
+    <button
+      id="scroll-to-top"
+      class="fixed bottom-6 right-6 bg-red-accent hover:bg-red-accent/90 text-white rounded-full p-3 shadow-lg transition-all duration-300 opacity-0 invisible z-50"
+      style="transform: translateY(100px)"
+      title="Volver arriba"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
+      </svg>
+    </button>
+
     <script>
       // Lógica simple para el menú móvil
       const menuBtn = document.getElementById("menu-btn");
@@ -590,6 +612,32 @@
           </div>
         `;
       }
+    </script>
+
+    <script>
+      // Botón Scroll to Top
+      const scrollToTopBtn = document.getElementById("scroll-to-top");
+
+      // Mostrar/ocultar botón según scroll
+      window.addEventListener("scroll", function () {
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.style.opacity = "1";
+          scrollToTopBtn.style.visibility = "visible";
+          scrollToTopBtn.style.transform = "translateY(0)";
+        } else {
+          scrollToTopBtn.style.opacity = "0";
+          scrollToTopBtn.style.visibility = "invisible";
+          scrollToTopBtn.style.transform = "translateY(100px)";
+        }
+      });
+
+      // Scroll suave al top al hacer clic
+      scrollToTopBtn.addEventListener("click", function () {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
     </script>
 
     {% block scripts %}{% endblock %}
