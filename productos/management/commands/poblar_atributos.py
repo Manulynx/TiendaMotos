@@ -43,12 +43,15 @@ class Command(BaseCommand):
             # === TRICICLOS (Eléctricos o de Combustión) ===
             {'nombre': 'Tipo de Energía', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 30},
             {'nombre': 'Potencia/Cilindraje', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 31},
-            {'nombre': 'Capacidad de Carga', 'tipo_producto': 'triciclo', 'unidad_medida': 'kg', 'orden': 32},
-            {'nombre': 'Dimensiones de Caja', 'tipo_producto': 'triciclo', 'unidad_medida': 'm', 'orden': 33},
-            {'nombre': 'Tipo de Estructura', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 34},
-            {'nombre': 'Tracción', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 35},
-            {'nombre': 'Sistema de Marchas', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 36},
-            {'nombre': 'Tipo de Cabina', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 37},
+            {'nombre': 'Voltaje de Batería', 'tipo_producto': 'triciclo', 'unidad_medida': 'V', 'orden': 32},
+            {'nombre': 'Capacidad de Batería', 'tipo_producto': 'triciclo', 'unidad_medida': 'Ah', 'orden': 33},
+            {'nombre': 'Capacidad de Carga', 'tipo_producto': 'triciclo', 'unidad_medida': 'kg', 'orden': 34},
+            {'nombre': 'Dimensiones de Caja', 'tipo_producto': 'triciclo', 'unidad_medida': 'm', 'orden': 35},
+            {'nombre': 'Tipo de Estructura', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 36},
+            {'nombre': 'Tracción', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 37},
+            {'nombre': 'Sistema de Marchas', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 38},
+            {'nombre': 'Tipo de Cabina', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 39},
+            
         ]
         
         created_count = 0
