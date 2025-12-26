@@ -166,9 +166,7 @@
         <h3 class="font-heading font-bold text-lg mb-4 text-blue-dark">
           Especificaciones Técnicas
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {% regroup producto.valores_atributos.all by atributo.tipo_producto as
-          atributos_agrupados %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3"> {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
 
           <!-- Atributos generales -->
           {% for grupo in atributos_agrupados %} 
