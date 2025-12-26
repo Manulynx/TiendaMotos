@@ -171,8 +171,9 @@
           atributos_agrupados %}
 
           <!-- Atributos generales -->
-          {% for grupo in atributos_agrupados %} {% if grupo.grouper ==
-          'general' %} {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper == 'general' %} 
+          {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-blue-50 px-4 py-3 rounded"
           >
@@ -195,11 +196,14 @@
             >
             {% endif %}
           </div>
-          {% endfor %} {% endif %} {% endfor %}
+          {% endfor %} 
+          {% endif %} 
+          {% endfor %}
 
           <!-- Atributos específicos -->
-          {% for grupo in atributos_agrupados %} {% if grupo.grouper !=
-          'general' %} {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper != 'general' %} 
+          {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-purple-50 px-4 py-3 rounded"
           >
@@ -210,7 +214,9 @@
               >{{ valor.valor_formateado }}</span
             >
           </div>
-          {% endfor %} {% endif %} {% endfor %}
+          {% endfor %} 
+          {% endif %} 
+          {% endfor %}
         </div>
       </div>
       {% endif %}
