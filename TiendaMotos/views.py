@@ -14,3 +14,8 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+
+def contacto(request):
+    """Vista de la página de contacto"""
+    return render(request, 'contacto.html')
+
