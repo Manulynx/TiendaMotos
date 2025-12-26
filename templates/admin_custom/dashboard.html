@@ -104,24 +104,24 @@ general del inventario{% endblock %} {% block content %}
     </div>
   </div>
 
-  <!-- Sin Stock -->
+  <!-- Atributos -->
   <div
     class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 card-hover"
   >
     <div class="flex items-center justify-between">
       <div>
         <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
-          Sin Stock
+          Atributos
         </p>
-        <h3 class="text-2xl md:text-3xl font-bold text-red-accent">
-          {{ productos_sin_stock }}
+        <h3 class="text-2xl md:text-3xl font-bold text-orange-600">
+          {{ total_atributos }}
         </h3>
       </div>
       <div
-        class="w-12 h-12 md:w-14 md:h-14 bg-red-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-orange-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-6 h-6 md:w-7 md:h-7 text-red-accent"
+          class="w-6 h-6 md:w-7 md:h-7 text-orange-600"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -130,7 +130,7 @@ general del inventario{% endblock %} {% block content %}
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
           />
         </svg>
       </div>
@@ -230,6 +230,35 @@ general del inventario{% endblock %} {% block content %}
           <p class="font-semibold text-sm md:text-base">Categorías</p>
           <p class="text-xs text-white/80 hidden sm:block">
             Organizar productos
+          </p>
+        </div>
+      </a>
+
+      <a
+        href="{% url 'productos:admin_atributos_lista' %}"
+        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all group"
+      >
+        <div
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+        >
+          <svg
+            class="w-5 h-5 md:w-6 md:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="font-semibold text-sm md:text-base">Atributos</p>
+          <p class="text-xs text-white/80 hidden sm:block">
+            Gestionar atributos
           </p>
         </div>
       </a>

@@ -13,6 +13,12 @@
       rel="stylesheet"
     />
 
+    <!-- noUiSlider CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"
+    />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -185,7 +191,7 @@
                 >Inicio</a
               >
             </li>
-            
+
             <li>
               <a
                 href="{% url 'productos:lista' %}"
@@ -193,7 +199,7 @@
                 >CATÁLOGO</a
               >
             </li>
-            
+
             <li>
               <a
                 href="{% url 'productos:admin_dashboard' %}"
@@ -221,7 +227,6 @@
                 ADMIN
               </a>
             </li>
-            
           </ul>
         </nav>
 
@@ -238,8 +243,7 @@
                 >Inicio</a
               >
             </li>
-            
-            
+
             <li>
               <a
                 href="{% url 'productos:lista' %}"
@@ -247,7 +251,7 @@
                 >CATÁLOGO</a
               >
             </li>
-            
+
             <li>
               <a
                 href="{% url 'productos:admin_dashboard' %}"
@@ -275,7 +279,6 @@
                 ADMINISTRACIÓN
               </a>
             </li>
-            
           </ul>
         </nav>
       </div>
@@ -614,6 +617,9 @@
         });
       });
     </script>
+
+    <!-- noUiSlider JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 
     {% block scripts %}{% endblock %}
   </body>

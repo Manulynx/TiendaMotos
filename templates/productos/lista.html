@@ -108,39 +108,38 @@
           </div>
         </div>
 
-        <!-- Filtro por Rango de Precio -->
+        <!-- Filtro por Rango de Precio con Slider -->
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-3">
             Rango de Precio (USD)
           </label>
-          <div class="space-y-3">
-            <div>
-              <label for="precio_min" class="text-xs text-gray-600">Mínimo</label>
-              <input 
-                type="number" 
-                id="precio_min" 
-                name="precio_min" 
-                value="{{ request.GET.precio_min }}"
-                min="0" 
-                step="100"
-                placeholder="$0" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label for="precio_max" class="text-xs text-gray-600">Máximo</label>
-              <input 
-                type="number" 
-                id="precio_max" 
-                name="precio_max" 
-                value="{{ request.GET.precio_max }}"
-                min="0" 
-                step="100"
-                placeholder="$50,000" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-dark focus:border-transparent"
-              />
-            </div>
+          
+          <!-- Slider Visual -->
+          <div id="price-slider" class="mb-4"></div>
+          
+          <!-- Etiquetas de Precio -->
+          <div class="flex justify-between items-center mb-3">
+            <span id="min-label" class="text-sm font-bold text-blue-dark bg-gray-100 px-3 py-1 rounded">
+              $0
+            </span>
+            <span id="max-label" class="text-sm font-bold text-blue-dark bg-gray-100 px-3 py-1 rounded">
+              ${{ precio_max_db|floatformat:0 }}
+            </span>
           </div>
+          
+          <!-- Inputs ocultos que envía el formulario -->
+          <input 
+            type="hidden" 
+            id="precio_min" 
+            name="precio_min" 
+            value="{{ request.GET.precio_min|default:'0' }}"
+          />
+          <input 
+            type="hidden" 
+            id="precio_max" 
+            name="precio_max" 
+            value="{{ request.GET.precio_max|default:precio_max_db }}"
+          />
         </div>
 
         <!-- Filtro por Disponibilidad -->
@@ -160,6 +159,39 @@
               Solo productos en stock
             </span>
           </label>
+        </div>
+
+        <!-- Filtro por Color -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-3">
+            Colores Disponibles
+          </label>
+          <div class="grid grid-cols-4 gap-2">
+            {% for color in colores_disponibles %}
+            <label class="cursor-pointer group relative" title="{{ color.nombre }}">
+              <input 
+                type="checkbox" 
+                name="color" 
+                value="{{ color.id }}"
+                {% if color in colores_seleccionados %}checked{% endif %}
+                class="sr-only peer"
+              />
+              <div class="w-12 h-12 rounded-full border-2 border-gray-300 peer-checked:border-blue-dark peer-checked:ring-2 peer-checked:ring-blue-dark peer-checked:ring-offset-2 transition-all hover:scale-110 relative overflow-hidden"
+                   style="background-color: {{ color.codigo_hex }};">
+                <!-- Checkmark cuando está seleccionado -->
+                <svg class="absolute inset-0 m-auto w-6 h-6 text-white opacity-0 peer-checked:opacity-100 transition-opacity" 
+                     style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <!-- Tooltip con nombre del color -->
+              <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                {{ color.nombre }}
+              </span>
+            </label>
+            {% endfor %}
+          </div>
         </div>
 
         <!-- Ordenar por -->
@@ -384,6 +416,20 @@
                 Ver Detalles
               </a>
             </div>
+
+            <!-- Colores Disponibles -->
+            {% if producto.colores.exists %}
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs text-gray-500 font-medium">Colores:</span>
+              {% for color in producto.colores_disponibles %}
+              <span 
+                class="w-5 h-5 rounded-full border-2 border-gray-300 shadow-sm" 
+                style="background-color: {{ color.codigo_hex }};"
+                title="{{ color.nombre }}"
+              ></span>
+              {% endfor %}
+            </div>
+            {% endif %}
           </div>
         </article>
         
@@ -422,14 +468,52 @@
 
 {% block scripts %}
 <script>
-  // Prevenir submit en Enter del campo de búsqueda para mejor UX
-  document.getElementById('busqueda').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const form = document.getElementById('filtros-form');
-      form.submit();
+  // Inicializar el slider de precio
+  document.addEventListener('DOMContentLoaded', function() {
+    var slider = document.getElementById('price-slider');
+    var maxPrice = {{ precio_max_db|floatformat:0 }};
+    var currentMin = {{ request.GET.precio_min|default:0 }};
+    var currentMax = {{ request.GET.precio_max|default:precio_max_db }};
+
+    if (slider) {
+      noUiSlider.create(slider, {
+        start: [currentMin, currentMax],
+        connect: true,
+        range: {
+          'min': 0,
+          'max': maxPrice
+        },
+        step: 50,
+        format: {
+          to: function (value) { return Math.round(value); },
+          from: function (value) { return Number(value); }
+        }
+      });
+
+      // Actualizar etiquetas y campos ocultos al mover el slider
+      slider.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('min-label').textContent = '$' + values[0];
+        document.getElementById('max-label').textContent = '$' + values[1];
+        document.getElementById('precio_min').value = values[0];
+        document.getElementById('precio_max').value = values[1];
+      });
+
+      // Auto-submit al soltar el slider (opcional, puedes quitarlo)
+      slider.noUiSlider.on('change', function () {
+        // Comentar esta línea si prefieres que solo se aplique al dar clic en "Aplicar Filtros"
+        // document.getElementById('filtros-form').submit();
+      });
     }
   });
+
+  // Ordenar por precio
+  const ordenarSelect = document.getElementById('ordenar');
+  if (ordenarSelect) {
+    ordenarSelect.addEventListener('change', function() {
+      const form = document.getElementById('filtros-form');
+      form.submit();
+    });
+  }
 
   // Toggle de filtros en móvil
   const toggleBtn = document.getElementById('toggle-filtros-mobile');
@@ -440,7 +524,7 @@
     toggleBtn.addEventListener('click', () => {
       panelFiltros.classList.remove('hidden');
       panelFiltros.classList.add('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto', 'bg-white');
-      document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+      document.body.style.overflow = 'hidden';
     });
   }
 
@@ -448,7 +532,7 @@
     cerrarBtn.addEventListener('click', () => {
       panelFiltros.classList.add('hidden');
       panelFiltros.classList.remove('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto');
-      document.body.style.overflow = ''; // Restaurar scroll del body
+      document.body.style.overflow = '';
     });
   }
 
@@ -458,7 +542,6 @@
   
   if (applyButton) {
     applyButton.addEventListener('click', () => {
-      // Cerrar el panel de filtros en móvil después de aplicar
       if (window.innerWidth < 1024) {
         setTimeout(() => {
           if (panelFiltros) {
@@ -471,4 +554,85 @@
     });
   }
 </script>
+
+<style>
+/* --- ESTILOS PERSONALIZADOS PARA EL SLIDER DE LUJO --- */
+
+/* 1. La barra de fondo (Riel) */
+#price-slider {
+    height: 8px;
+    border: none;
+    background: #E2E8F0;
+    box-shadow: none;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* 2. La barra de conexión (El progreso entre puntos) */
+.noUi-connect {
+    background: #d63031 !important; /* Red Accent */
+}
+
+/* 3. Los manejadores (Los círculos que se arrastran) */
+.noUi-horizontal .noUi-handle {
+    width: 22px;
+    height: 22px;
+    right: -11px;
+    top: -8px;
+    border-radius: 50%;
+    background: #1a2332; /* Blue Dark */
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/* Quitar las rayitas decorativas por defecto */
+.noUi-handle:before,
+.noUi-handle:after {
+    display: none;
+}
+
+/* Efecto hover en el manejador */
+.noUi-handle:hover {
+    transform: scale(1.15);
+    background: #d63031; /* Red Accent */
+}
+
+.noUi-handle:active {
+    transform: scale(1.2);
+}
+
+/* 4. Tooltip (opcional, si lo activas) */
+.noUi-tooltip {
+    display: none;
+    position: absolute;
+    border: 1px solid #E2E8F0;
+    border-radius: 3px;
+    background: white;
+    color: #1a2332;
+    padding: 3px 8px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.noUi-active .noUi-tooltip {
+    display: block;
+}
+
+/* 5. Etiquetas de precio */
+#min-label, #max-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+#min-label:hover, #max-label:hover {
+    background: #1a2332;
+    color: white;
+}
+</style>
 {% endblock %}

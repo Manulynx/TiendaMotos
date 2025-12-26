@@ -31,55 +31,85 @@ class Categoria(models.Model):
         return self.nombre
 
 
+class Color(models.Model):
+    """
+    Modelo para colores de productos con código hexadecimal
+    """
+    nombre = models.CharField(max_length=50, unique=True, verbose_name="Nombre del Color")
+    codigo_hex = models.CharField(
+        max_length=7, 
+        verbose_name="Código Hexadecimal",
+        help_text="Ej: #FF0000 para rojo"
+    )
+    orden = models.IntegerField(default=0, verbose_name="Orden de visualización")
+    es_activo = models.BooleanField(default=True, verbose_name="Activo")
+    
+    class Meta:
+        verbose_name = "Color"
+        verbose_name_plural = "Colores"
+        ordering = ['orden', 'nombre']
+    
+    def __str__(self):
+        return self.nombre
+
+
 class Producto(models.Model):
     """
     Modelo principal para productos. Contiene información común para todos los tipos.
     """
-    MONEDAS = [
-        ('USD', 'Dólar Estadounidense'),
-        ('CUP', 'Peso Cubano'),
-        ('EUR', 'Euro'),
-        ('MLC', 'Moneda Libremente Convertible'),
-    ]
-    
+    # Identificación
+    sku = models.CharField(
+        max_length=50, 
+        unique=True, 
+        blank=True,
+        verbose_name="SKU (Código de Producto)"
+    )
     nombre = models.CharField(max_length=200, verbose_name="Nombre del Producto")
+    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción Detallada")
     categoria = models.ForeignKey(
         Categoria,
         on_delete=models.PROTECT,
         related_name='productos',
         verbose_name="Categoría"
     )
+    
+    # Precio
     precio_venta = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name="Precio de Venta"
     )
+    
+    MONEDAS = [
+        ('USD', 'Dólares USD'),
+        ('EUR', 'Euros'),
+        ('CUP', 'Pesos Cubanos'),
+        ('MLC', 'Moneda Libremente Convertible')
+    ]
     moneda = models.CharField(
         max_length=3,
         choices=MONEDAS,
         default='USD',
         verbose_name="Moneda"
     )
-    sku = models.CharField(
-        max_length=50,
-        unique=True,
-        editable=False,
-        verbose_name="SKU",
-        help_text="Código único generado automáticamente"
+    
+    # Colores disponibles (relación muchos a muchos)
+    colores = models.ManyToManyField(
+        Color,
+        related_name='productos',
+        blank=True,
+        verbose_name="Colores Disponibles"
     )
+    
+    # Inventario
     stock_actual = models.IntegerField(
         default=0,
         validators=[MinValueValidator(0)],
         verbose_name="Stock Actual"
     )
-    es_activo = models.BooleanField(
-        default=True,
-        verbose_name="Activo",
-        help_text="Desactiva el producto sin eliminarlo"
-    )
     
-    # Campos multimedia
+    # Multimedia
     imagen_principal = models.ImageField(
         upload_to='productos/imagenes/',
         blank=True,
@@ -87,8 +117,10 @@ class Producto(models.Model):
         verbose_name="Imagen Principal"
     )
     
-    # Campos adicionales útiles
-    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
+    # Estado
+    es_activo = models.BooleanField(default=True, verbose_name="Activo")
+    
+    # Fechas
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
     fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última Actualización")
     
@@ -98,7 +130,6 @@ class Producto(models.Model):
         ordering = ['-fecha_creacion']
     
     def save(self, *args, **kwargs):
-        # Generar SKU automáticamente si no existe
         if not self.sku:
             self.sku = self._generar_sku()
         super().save(*args, **kwargs)
@@ -107,8 +138,8 @@ class Producto(models.Model):
         """
         Genera un SKU único basado en categoría y UUID.
         """
-        prefijo = self.categoria.nombre[:3].upper() if self.categoria else 'PRD'
-        codigo_unico = str(uuid.uuid4().hex)[:8].upper()
+        prefijo = self.categoria.nombre[:3].upper()
+        codigo_unico = str(uuid.uuid4())[:8].upper()
         return f"{prefijo}-{codigo_unico}"
     
     def __str__(self):
@@ -123,6 +154,11 @@ class Producto(models.Model):
     def en_stock(self):
         """Indica si hay stock disponible."""
         return self.stock_actual > 0
+    
+    @property
+    def colores_disponibles(self):
+        """Retorna lista de colores disponibles"""
+        return self.colores.filter(es_activo=True)
 
 
 class ImagenProducto(models.Model):
@@ -135,27 +171,15 @@ class ImagenProducto(models.Model):
         related_name='galeria_imagenes',
         verbose_name="Producto"
     )
-    imagen = models.ImageField(
-        upload_to='productos/galeria/',
-        verbose_name="Imagen"
-    )
-    orden = models.IntegerField(
-        default=0,
-        verbose_name="Orden",
-        help_text="Orden de visualización en la galería"
-    )
-    descripcion = models.CharField(
-        max_length=200,
-        blank=True,
-        null=True,
-        verbose_name="Descripción"
-    )
+    imagen = models.ImageField(upload_to='productos/galeria/', verbose_name="Imagen")
+    descripcion = models.CharField(max_length=200, blank=True, null=True, verbose_name="Descripción")
+    orden = models.IntegerField(default=0, verbose_name="Orden")
     fecha_subida = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Subida")
     
     class Meta:
         verbose_name = "Imagen de Producto"
         verbose_name_plural = "Imágenes de Productos"
-        ordering = ['producto', 'orden']
+        ordering = ['orden', 'fecha_subida']
     
     def __str__(self):
         return f"Imagen de {self.producto.nombre} (#{self.orden})"
@@ -165,34 +189,46 @@ class AtributoDinamico(models.Model):
     """
     Define atributos personalizables para productos (ej. Voltaje, Autonomía, Cilindrada).
     """
-    nombre = models.CharField(
-        max_length=100,
-        unique=True,
-        verbose_name="Nombre del Atributo"
+    TIPOS_PRODUCTO = [
+        ('general', 'General (Todos)'),
+        ('electrica', 'Motos Eléctricas'),
+        ('combustion', 'Motos de Combustión'),
+        ('triciclo', 'Triciclos')
+    ]
+    
+    nombre = models.CharField(max_length=100, verbose_name="Nombre del Atributo")
+    tipo_producto = models.CharField(
+        max_length=20,
+        choices=TIPOS_PRODUCTO,
+        default='general',
+        verbose_name="Tipo de Producto"
     )
     unidad_medida = models.CharField(
         max_length=20,
         blank=True,
         null=True,
         verbose_name="Unidad de Medida",
-        help_text="Ej. V, Ah, km, cc, kg"
+        help_text="Ej: km, W, cc, L"
     )
     descripcion = models.TextField(
         blank=True,
         null=True,
         verbose_name="Descripción"
     )
+    orden = models.IntegerField(
+        default=0,
+        verbose_name="Orden de visualización"
+    )
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
     
     class Meta:
         verbose_name = "Atributo Dinámico"
         verbose_name_plural = "Atributos Dinámicos"
-        ordering = ['nombre']
+        ordering = ['tipo_producto', 'orden', 'nombre']
+        unique_together = ['nombre', 'tipo_producto']
     
     def __str__(self):
-        if self.unidad_medida:
-            return f"{self.nombre} ({self.unidad_medida})"
-        return self.nombre
+        return f"{self.nombre} ({self.get_tipo_producto_display()})"
 
 
 class ValorProducto(models.Model):
@@ -211,21 +247,15 @@ class ValorProducto(models.Model):
         related_name='valores',
         verbose_name="Atributo"
     )
-    valor = models.CharField(
-        max_length=255,
-        verbose_name="Valor"
-    )
-    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
+    valor = models.CharField(max_length=200, verbose_name="Valor")
     
     class Meta:
         verbose_name = "Valor de Atributo"
         verbose_name_plural = "Valores de Atributos"
         unique_together = ['producto', 'atributo']
-        ordering = ['producto', 'atributo']
     
     def __str__(self):
-        unidad = f" {self.atributo.unidad_medida}" if self.atributo.unidad_medida else ""
-        return f"{self.producto.nombre} - {self.atributo.nombre}: {self.valor}{unidad}"
+        return f"{self.producto.nombre} - {self.atributo.nombre}: {self.valor}"
     
     @property
     def valor_formateado(self):

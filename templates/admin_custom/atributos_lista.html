@@ -1,0 +1,393 @@
+{% extends 'admin_custom/base.html' %} 
+{% block title %}Atributos Dinámicos{% endblock %} 
+{% block page_title %}Atributos Dinámicos{% endblock %} 
+{% block page_subtitle %}Gestión de atributos personalizables para productos{% endblock%} 
+{% block content %}
+<!-- Barra de acciones -->
+<div class="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-4 md:mb-6">
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+  >
+    <!-- Búsqueda -->
+    <form method="GET" class="flex-1 max-w-md">
+      <div class="relative">
+        <input
+          type="text"
+          name="q"
+          value="{{ query }}"
+          placeholder="Buscar atributos..."
+          class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
+        />
+        <svg
+          class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+    </form>
+
+    <!-- Botón Nuevo Atributo -->
+    <a
+      href="{% url 'productos:admin_atributo_crear' %}"
+      class="inline-flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 bg-red-accent hover:bg-red-accent/90 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md whitespace-nowrap"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+      <span class="hidden sm:inline">Nuevo Atributo</span>
+      <span class="sm:hidden">Nuevo</span>
+    </a>
+  </div>
+</div>
+
+<!-- Lista de Atributos -->
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  {% if atributos %}
+  <!-- Vista Desktop: Tabla -->
+  <div class="hidden md:block overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          >
+            Nombre
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          >
+            Unidad de Medida
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          >
+            Descripción
+          </th>
+          <th
+            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          >
+            Valores Asociados
+          </th>
+          <th
+            class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+          >
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for atributo in atributos %}
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4">
+            <div class="font-semibold text-gray-900">{{ atributo.nombre }}</div>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+            >
+              {{ atributo.unidad_medida|default:"Sin unidad" }}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-600 max-w-xs truncate">
+              {{ atributo.descripcion|default:"Sin descripción" }}
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+            >
+              {{ atributo.valores.count }} productos
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center justify-center gap-2">
+              <a
+                href="{% url 'productos:admin_atributo_editar' atributo.id %}"
+                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                title="Editar"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </a>
+              <button
+                onclick="confirmarEliminar({{ atributo.id }}, '{{ atributo.nombre }}')"
+                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                title="Eliminar"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vista Mobile: Cards -->
+  <div class="md:hidden divide-y divide-gray-200">
+    {% for atributo in atributos %}
+    <div class="p-4 hover:bg-gray-50 transition-colors">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-gray-900 mb-1">
+            {{ atributo.nombre }}
+          </h3>
+          <div class="flex items-center gap-2 mb-2">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+            >
+              {{ atributo.unidad_medida|default:"Sin unidad" }}
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+            >
+              {{ atributo.valores.count }} productos
+            </span>
+          </div>
+          {% if atributo.descripcion %}
+          <p class="text-sm text-gray-600 line-clamp-2">
+            {{ atributo.descripcion }}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="{% url 'productos:admin_atributo_editar' atributo.id %}"
+          class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+          Editar
+        </a>
+        <button
+          onclick="confirmarEliminar({{ atributo.id }}, '{{ atributo.nombre }}')"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="p-8 md:p-12 text-center">
+    <svg
+      class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-gray-300"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+      />
+    </svg>
+    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+      No hay atributos registrados
+    </h3>
+    <p class="text-gray-500 mb-6">
+      Comienza creando tu primer atributo dinámico
+    </p>
+    <a
+      href="{% url 'productos:admin_atributo_crear' %}"
+      class="inline-flex items-center gap-2 px-6 py-3 bg-red-accent hover:bg-red-accent/90 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+      Crear Primer Atributo
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Modal de Confirmación -->
+<div
+  id="deleteModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+>
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+    <div class="flex items-center gap-4 mb-4">
+      <div
+        class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0"
+      >
+        <svg
+          class="w-6 h-6 text-red-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-gray-900">Confirmar Eliminación</h3>
+        <p class="text-sm text-gray-600">Esta acción no se puede deshacer</p>
+      </div>
+    </div>
+
+    <p class="text-gray-700 mb-6">
+      ¿Estás seguro de que deseas eliminar el atributo
+      <strong id="deleteAtributoNombre"></strong>?
+    </p>
+
+    <div class="flex gap-3">
+      <button
+        onclick="cerrarModal()"
+        class="flex-1 px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors"
+      >
+        Cancelar
+      </button>
+      <button
+        id="confirmDeleteBtn"
+        class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let atributoIdToDelete = null;
+
+  function confirmarEliminar(atributoId, atributoNombre) {
+    atributoIdToDelete = atributoId;
+    document.getElementById("deleteAtributoNombre").textContent =
+      atributoNombre;
+    document.getElementById("deleteModal").classList.remove("hidden");
+  }
+
+  function cerrarModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+    atributoIdToDelete = null;
+  }
+
+  document
+    .getElementById("confirmDeleteBtn")
+    .addEventListener("click", async function () {
+      if (!atributoIdToDelete) return;
+
+      try {
+        const response = await fetch(
+          `/productos/admin-custom/atributos/${atributoIdToDelete}/eliminar/`,
+          {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrftoken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+          showToast(data.message, "success");
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          showToast(data.message, "error");
+        }
+      } catch (error) {
+        showToast("Error al eliminar el atributo", "error");
+      }
+
+      cerrarModal();
+    });
+
+  // Cerrar modal al hacer clic fuera
+  document
+    .getElementById("deleteModal")
+    .addEventListener("click", function (e) {
+      if (e.target === this) {
+        cerrarModal();
+      }
+    });
+</script>
+{% endblock %}

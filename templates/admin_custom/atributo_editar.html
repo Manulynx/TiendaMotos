@@ -1,0 +1,165 @@
+{% extends 'admin_custom/base.html' %} {% block title %}Editar Atributo{%
+endblock %} {% block page_title %}Editar Atributo Dinámico{% endblock %} {%
+block page_subtitle %}Modifica los datos del atributo{% endblock %} {% block
+content %}
+<div class="max-w-3xl mx-auto">
+  <!-- Breadcrumb -->
+  <nav class="flex items-center gap-2 text-sm mb-6" aria-label="Breadcrumb">
+    <a
+      href="{% url 'productos:admin_dashboard' %}"
+      class="text-gray-500 hover:text-gray-700"
+      >Dashboard</a
+    >
+    <svg
+      class="w-4 h-4 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"
+      />
+    </svg>
+    <a
+      href="{% url 'productos:admin_atributos_lista' %}"
+      class="text-gray-500 hover:text-gray-700"
+      >Atributos</a
+    >
+    <svg
+      class="w-4 h-4 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"
+      />
+    </svg>
+    <span class="text-gray-900 font-medium">{{ atributo.nombre }}</span>
+  </nav>
+
+  <form method="POST" class="bg-white rounded-xl shadow-sm overflow-hidden">
+    {% csrf_token %}
+
+    <div class="p-6 md:p-8 space-y-6">
+      <!-- Info del atributo -->
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span
+            >Este atributo está siendo usado en
+            <strong>{{ atributo.valores.count }}</strong> producto(s)</span
+          >
+        </div>
+      </div>
+
+      <!-- Nombre -->
+      <div>
+        <label
+          for="nombre"
+          class="block text-sm font-semibold text-gray-700 mb-2"
+        >
+          Nombre del Atributo <span class="text-red-accent">*</span>
+        </label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          value="{{ atributo.nombre }}"
+          required
+          autofocus
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
+          placeholder="Ej: Voltaje, Autonomía, Cilindrada, Peso"
+        />
+        <p class="mt-1 text-xs text-gray-500">
+          Este nombre debe ser único y descriptivo
+        </p>
+      </div>
+
+      <!-- Unidad de Medida -->
+      <div>
+        <label
+          for="unidad_medida"
+          class="block text-sm font-semibold text-gray-700 mb-2"
+        >
+          Unidad de Medida
+        </label>
+        <input
+          type="text"
+          id="unidad_medida"
+          name="unidad_medida"
+          value="{{ atributo.unidad_medida|default:'' }}"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
+          placeholder="Ej: V, Ah, km, cc, kg, m"
+        />
+        <p class="mt-1 text-xs text-gray-500">
+          Opcional. Ej: V (Voltios), km (Kilómetros), cc (Centímetros Cúbicos)
+        </p>
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label
+          for="descripcion"
+          class="block text-sm font-semibold text-gray-700 mb-2"
+        >
+          Descripción
+        </label>
+        <textarea
+          id="descripcion"
+          name="descripcion"
+          rows="4"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all resize-none"
+          placeholder="Descripción opcional del atributo y su uso..."
+        >
+{{ atributo.descripcion|default:'' }}</textarea
+        >
+        <p class="mt-1 text-xs text-gray-500">
+          Información adicional sobre este atributo (opcional)
+        </p>
+      </div>
+
+      <!-- Fecha de creación -->
+      <div class="text-xs text-gray-500">
+        Creado el {{ atributo.fecha_creacion|date:"d/m/Y \a \l\a\s H:i" }}
+      </div>
+    </div>
+
+    <!-- Botones de acción (sticky en mobile) -->
+    <div
+      class="sticky bottom-0 left-0 right-0 bg-gray-50 px-6 md:px-8 py-4 border-t border-gray-200 flex flex-col-reverse sm:flex-row gap-3 z-10"
+    >
+      <a
+        href="{% url 'productos:admin_atributos_lista' %}"
+        class="flex-1 sm:flex-none px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-center"
+      >
+        Cancelar
+      </a>
+      <button
+        type="submit"
+        class="flex-1 sm:flex-none px-6 py-3 bg-red-accent hover:bg-red-accent/90 text-white rounded-lg font-semibold transition-colors shadow-sm hover:shadow-md"
+      >
+        Guardar Cambios
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

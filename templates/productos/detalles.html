@@ -1,6 +1,7 @@
 {% extends 'base.html' %} 
 {% load static %} 
-{% block title %}{{ producto.nombre}} - MotoLuxe{% endblock %} 
+{% load custom_filters %} 
+{% block title %}{{producto.nombre}} - MotoLuxe{% endblock %} 
 {% block content %}
 
 <!-- Breadcrumb -->
@@ -139,18 +140,55 @@
         <h3 class="font-heading font-bold text-lg mb-4 text-blue-dark">
           Especificaciones Técnicas
         </h3>
-        <div class="grid grid-cols-1 gap-3">
-          {% for valor in producto.valores_atributos.all %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
+
+          <!-- Atributos generales -->
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper == 'general' %} 
+          {% for valor in grupo.list %}
           <div
-            class="flex justify-between items-center bg-gray-50 px-4 py-3 rounded"
+            class="flex justify-between items-center bg-blue-50 px-4 py-3 rounded"
           >
             <span class="font-semibold text-gray-700"
               >{{ valor.atributo.nombre }}</span
             >
+            {% if valor.atributo.nombre == 'Color' %}
+            <span class="flex items-center gap-2">
+              <span
+                class="w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
+                style="background-color: {{ valor.valor|lower|color_hex }};"
+              ></span>
+              <span class="text-blue-dark font-bold"
+                >{{ valor.valor_formateado }}</span
+              >
+            </span>
+            {% else %}
             <span class="text-blue-dark font-bold"
               >{{ valor.valor_formateado }}</span
             >
+            {% endif %}
           </div>
+          {% endfor %} 
+          {% endif %}
+          {% endfor %}
+
+          <!-- Atributos específicos -->
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper != 'general' %} 
+          {% for valor in grupo.list %}
+          <div
+            class="flex justify-between items-center bg-purple-50 px-4 py-3 rounded"
+          >
+            <span class="font-semibold text-gray-700"
+              >{{ valor.atributo.nombre }}</span
+            >
+            <span class="text-purple-700 font-bold"
+              >{{ valor.valor_formateado }}</span
+            >
+          </div>
+          {% endfor %} 
+          {% endif %}
           {% endfor %}
         </div>
       </div>
@@ -260,7 +298,7 @@
     {% endfor %}
   </div>
 </section>
-{% endif %} {% endblock %} {% block scripts %}
+{% endif %} {% block scripts %}
 <script>
   // Función para cambiar la imagen principal
   function cambiarImagen(urlImagen) {
@@ -288,4 +326,4 @@
       });
     });
 </script>
-{% endblock %}
+{% endblock %} {% endblock %}
