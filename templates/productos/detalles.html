@@ -1,8 +1,5 @@
-{% extends 'base.html' %} 
-{% load static %} 
-{% load custom_filters %} 
-{% block title %}{{producto.nombre}} - MotoLuxe{% endblock %} 
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block
+title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
 
 <!-- Breadcrumb -->
 <nav class="text-sm mb-8">
@@ -124,6 +121,32 @@
         <span class="font-semibold">SKU:</span> {{ producto.sku }}
       </div>
 
+      <!-- Colores Disponibles -->
+      {% if producto.colores.all %}
+      <div class="border-t border-gray-200 pt-6">
+        <h3 class="font-heading font-bold text-base mb-3 text-blue-dark">
+          Colores Disponibles
+        </h3>
+        <div class="flex flex-wrap gap-3">
+          {% for color in producto.colores.all %}
+          <div class="group relative">
+            <div
+              class="w-12 h-12 rounded-full border-3 border-gray-300 shadow-md transition-all duration-300 hover:scale-110 hover:shadow-xl cursor-pointer"
+              style="background-color: {{ color.codigo_hex }};"
+              title="{{ color.nombre }}"
+            ></div>
+            <!-- Tooltip -->
+            <div
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-blue-dark text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+            >
+              {{ color.nombre }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
       <!-- Descripción -->
       {% if producto.descripcion %}
       <div class="border-t border-gray-200 pt-6">
@@ -141,12 +164,12 @@
           Especificaciones Técnicas
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
+          {% regroup producto.valores_atributos.all by atributo.tipo_producto as
+          atributos_agrupados %}
 
           <!-- Atributos generales -->
-          {% for grupo in atributos_agrupados %} 
-          {% if grupo.grouper == 'general' %} 
-          {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} {% if grupo.grouper ==
+          'general' %} {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-blue-50 px-4 py-3 rounded"
           >
@@ -169,14 +192,11 @@
             >
             {% endif %}
           </div>
-          {% endfor %} 
-          {% endif %}
-          {% endfor %}
+          {% endfor %} {% endif %} {% endfor %}
 
           <!-- Atributos específicos -->
-          {% for grupo in atributos_agrupados %} 
-          {% if grupo.grouper != 'general' %} 
-          {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} {% if grupo.grouper !=
+          'general' %} {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-purple-50 px-4 py-3 rounded"
           >
@@ -187,9 +207,7 @@
               >{{ valor.valor_formateado }}</span
             >
           </div>
-          {% endfor %} 
-          {% endif %}
-          {% endfor %}
+          {% endfor %} {% endif %} {% endfor %}
         </div>
       </div>
       {% endif %}
