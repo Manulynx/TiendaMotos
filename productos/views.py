@@ -280,6 +280,16 @@ def admin_producto_crear(request):
             if colores_ids:
                 producto.colores.set(colores_ids)
             
+            # Guardar imágenes de galería
+            for key in request.FILES:
+                if key.startswith('galeria_'):
+                    imagen_file = request.FILES[key]
+                    ImagenProducto.objects.create(
+                        producto=producto,
+                        imagen=imagen_file,
+                        orden=0  # El orden se puede ajustar después en editar
+                    )
+            
             # Guardar atributos dinámicos
             atributos = AtributoDinamico.objects.all()
             for atributo in atributos:

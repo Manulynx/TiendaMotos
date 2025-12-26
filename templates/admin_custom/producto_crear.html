@@ -1,8 +1,7 @@
 {% extends 'admin_custom/base.html' %} 
 {% block title %}Crear Producto{%endblock%} 
 {% block page_title %}Crear Nuevo Producto{% endblock %} 
-{% block page_subtitle %}Agregar al inventario
-{% endblock %} 
+{%block page_subtitle %}Agregar al inventario {% endblock %} 
 {% block content %}
 
 <form
@@ -232,6 +231,58 @@
           onchange="previewImagen(event)"
         />
       </div>
+
+      <!-- Galería de Imágenes -->
+      <div>
+        <label class="block text-xs md:text-sm font-medium text-gray-700 mb-3">
+          Galería de Imágenes (Opcional)
+        </label>
+        <div
+          class="border-2 border-dashed border-gray-300 rounded-xl p-6 md:p-8 text-center hover:border-purple-500 transition-colors cursor-pointer"
+          onclick="document.getElementById('galeria-input').click()"
+        >
+          <div id="galeria-preview-container">
+            <svg
+              class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <p class="text-sm md:text-base text-gray-600 font-medium mb-1">
+              Click para subir múltiples imágenes
+            </p>
+            <p class="text-xs md:text-sm text-gray-400">
+              Puedes seleccionar varias imágenes a la vez
+            </p>
+          </div>
+        </div>
+        <input
+          type="file"
+          id="galeria-input"
+          name="galeria"
+          accept="image/*"
+          multiple
+          class="hidden"
+          onchange="previewGaleria(event)"
+        />
+
+        <!-- Grid de previsualizaciones -->
+        <div
+          id="galeria-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4 hidden"
+        ></div>
+
+        <p class="mt-2 text-xs text-gray-500">
+          💡 Puedes seleccionar múltiples imágenes para la galería del producto.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -278,7 +329,7 @@
 
 {% endblock %} {% block extra_js %}
 <script>
-  // Preview de imagen
+  // Preview de imagen principal
   function previewImagen(event) {
     const file = event.target.files[0];
     if (file) {
@@ -294,6 +345,76 @@
     }
   }
 
+  // Preview de galería de imágenes
+  let galeriaFiles = [];
+
+  function previewGaleria(event) {
+    const files = Array.from(event.target.files);
+    galeriaFiles = files;
+
+    const grid = document.getElementById("galeria-grid");
+    const previewContainer = document.getElementById(
+      "galeria-preview-container"
+    );
+
+    if (files.length === 0) {
+      grid.classList.add("hidden");
+      return;
+    }
+
+    grid.classList.remove("hidden");
+    grid.innerHTML = "";
+
+    files.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const div = document.createElement("div");
+        div.className = "relative group";
+        div.innerHTML = `
+          <img src="${e.target.result}" 
+               alt="${file.name}" 
+               class="w-full h-24 md:h-32 object-cover rounded-lg border-2 border-gray-200">
+          <button type="button" 
+                  onclick="eliminarImagenGaleria(${index})"
+                  class="absolute top-1 right-1 md:top-2 md:right-2 p-1 md:p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+          <p class="text-xs text-gray-600 mt-1 truncate">${file.name}</p>
+        `;
+        grid.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Actualizar el mensaje
+    previewContainer.innerHTML = `
+      <svg class="w-12 h-12 mx-auto mb-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      <p class="text-sm text-purple-600 font-medium mb-1">
+        ${files.length} imagen${files.length !== 1 ? "es" : ""} seleccionada${
+      files.length !== 1 ? "s" : ""
+    }
+      </p>
+      <p class="text-xs text-gray-500">Click para cambiar la selección</p>
+    `;
+  }
+
+  function eliminarImagenGaleria(index) {
+    galeriaFiles.splice(index, 1);
+
+    // Crear un nuevo FileList (simulado con DataTransfer)
+    const dataTransfer = new DataTransfer();
+    galeriaFiles.forEach((file) => dataTransfer.items.add(file));
+    document.getElementById("galeria-input").files = dataTransfer.files;
+
+    // Actualizar preview
+    const event = { target: { files: galeriaFiles } };
+    previewGaleria(event);
+  }
+
   // Crear producto
   document
     .getElementById("producto-form")
@@ -302,6 +423,14 @@
 
       const formData = new FormData(this);
       const submitBtn = document.getElementById("submit-btn");
+
+      // Agregar todas las imágenes de galería al FormData
+      const galeriaInput = document.getElementById("galeria-input");
+      if (galeriaInput.files.length > 0) {
+        Array.from(galeriaInput.files).forEach((file, index) => {
+          formData.append(`galeria_${index}`, file);
+        });
+      }
 
       // Deshabilitar botón y mostrar loading
       submitBtn.disabled = true;
