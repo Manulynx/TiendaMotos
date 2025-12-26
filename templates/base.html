@@ -561,8 +561,15 @@
           `;
         } else {
           const resultadosHTML = productos
-            .map(
-              (producto) => `
+            .map((producto) => {
+              const precio = parseFloat(producto.precio);
+              const precioFormateado = isNaN(precio)
+                ? "N/A"
+                : `${producto.moneda} ${precio.toLocaleString("es-ES", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`;
+              return `
             <a href="${producto.url}" class="block p-3 hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0">
               <div class="flex items-center space-x-3">
                 <div class="flex-shrink-0">
@@ -572,7 +579,7 @@
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-semibold text-gray-900 truncate">${producto.nombre}</p>
                   <p class="text-xs text-gray-500">${producto.categoria}</p>
-                  <p class="text-sm font-bold text-red-accent">${producto.precio_formateado}</p>
+                  <p class="text-sm font-bold text-red-accent">${precioFormateado}</p>
                 </div>
                 <div class="flex-shrink-0">
                   <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -581,8 +588,8 @@
                 </div>
               </div>
             </a>
-          `
-            )
+          `;
+            })
             .join("");
 
           targetContent.innerHTML =
