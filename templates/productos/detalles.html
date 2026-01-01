@@ -271,10 +271,11 @@
     Productos Relacionados
   </h2>
 
-  <div class="grid md:grid-cols-3 gap-8">
+  <div class="overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0">
+    <div class="flex gap-6 snap-x snap-mandatory md:grid md:grid-cols-3">
     {% for prod in productos_relacionados %}
     <article
-      class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl"
+      class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl flex-none w-[calc(50%-0.75rem)] md:w-auto snap-start"
     >
       <div
         class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider"
@@ -321,6 +322,7 @@
       </div>
     </article>
     {% endfor %}
+    </div>
   </div>
 </section>
 {% endif %} {% block scripts %}
