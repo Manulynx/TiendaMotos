@@ -51,7 +51,9 @@
         </button>
       </div>
 
-      <form method="GET" action="{% url 'productos:lista' %}" id="filtros-form" class="space-y-6 px-6 pb-6 lg:px-0 lg:pb-0">
+      <!-- Contenedor scrolleable para móvil -->
+      <div id="filtros-scroll-container" class="lg:contents">
+        <form method="GET" action="{% url 'productos:lista' %}" id="filtros-form" class="space-y-6 px-6 pb-6 lg:px-0 lg:pb-0">
         
         <!-- Búsqueda por Nombre -->
         <div>
@@ -143,23 +145,7 @@
         </div>
 
         <!-- Filtro por Disponibilidad -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-3">
-            Disponibilidad
-          </label>
-          <label class="flex items-center cursor-pointer group">
-            <input 
-              type="checkbox" 
-              name="en_stock" 
-              value="1"
-              {% if request.GET.en_stock %}checked{% endif %}
-              class="w-4 h-4 text-blue-dark focus:ring-blue-dark cursor-pointer rounded"
-            />
-            <span class="ml-2 text-sm text-gray-700 group-hover:text-blue-dark transition-colors">
-              Solo productos en stock
-            </span>
-          </label>
-        </div>
+        
 
         <!-- Filtro por Color -->
         <div>
@@ -257,6 +243,7 @@
           <div class="lg:hidden h-20"></div>
         </div>
       </form>
+      </div>
     </aside>
 
     <!-- Grid de Productos -->
@@ -523,7 +510,7 @@
   if (toggleBtn && panelFiltros) {
     toggleBtn.addEventListener('click', () => {
       panelFiltros.classList.remove('hidden');
-      panelFiltros.classList.add('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto', 'bg-white');
+      panelFiltros.classList.add('mobile-open');
       document.body.style.overflow = 'hidden';
     });
   }
@@ -531,7 +518,7 @@
   if (cerrarBtn && panelFiltros) {
     cerrarBtn.addEventListener('click', () => {
       panelFiltros.classList.add('hidden');
-      panelFiltros.classList.remove('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto');
+      panelFiltros.classList.remove('mobile-open');
       document.body.style.overflow = '';
     });
   }
@@ -546,7 +533,7 @@
         setTimeout(() => {
           if (panelFiltros) {
             panelFiltros.classList.add('hidden');
-            panelFiltros.classList.remove('block', 'fixed', 'inset-0', 'z-50', 'overflow-y-auto');
+            panelFiltros.classList.remove('mobile-open');
             document.body.style.overflow = '';
           }
         }, 100);
@@ -557,6 +544,24 @@
 
 <style>
 /* --- ESTILOS PERSONALIZADOS PARA EL SLIDER DE LUJO --- */
+
+/* Estilos para el panel de filtros en móvil */
+@media (max-width: 1023px) {
+  #panel-filtros.mobile-open {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: white;
+    overflow: hidden;
+  }
+  
+  #filtros-scroll-container {
+    height: calc(100vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
 
 /* 1. La barra de fondo (Riel) */
 #price-slider {
