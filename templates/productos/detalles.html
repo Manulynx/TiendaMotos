@@ -1,8 +1,5 @@
-{% extends 'base.html' %} 
-{% load static %} 
-{% load custom_filters %} 
-{% block title %}{{producto.nombre}} - MotoLuxe{% endblock %} 
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block
+title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
 
 <!-- Breadcrumb -->
 <nav class="text-sm mb-8">
@@ -166,12 +163,13 @@
         <h3 class="font-heading font-bold text-lg mb-4 text-blue-dark">
           Especificaciones Técnicas
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3"> {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {% regroup producto.valores_atributos.all by atributo.tipo_producto as
+          atributos_agrupados %}
 
           <!-- Atributos generales -->
-          {% for grupo in atributos_agrupados %} 
-          {% if grupo.grouper == 'general' %} 
-          {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} {% if grupo.grouper ==
+          'general' %} {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-blue-50 px-4 py-3 rounded"
           >
@@ -194,14 +192,11 @@
             >
             {% endif %}
           </div>
-          {% endfor %} 
-          {% endif %} 
-          {% endfor %}
+          {% endfor %} {% endif %} {% endfor %}
 
           <!-- Atributos específicos -->
-          {% for grupo in atributos_agrupados %} 
-          {% if grupo.grouper != 'general' %} 
-          {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} {% if grupo.grouper !=
+          'general' %} {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-purple-50 px-4 py-3 rounded"
           >
@@ -212,9 +207,7 @@
               >{{ valor.valor_formateado }}</span
             >
           </div>
-          {% endfor %} 
-          {% endif %} 
-          {% endfor %}
+          {% endfor %} {% endif %} {% endfor %}
         </div>
       </div>
       {% endif %}
@@ -273,55 +266,55 @@
 
   <div class="overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0">
     <div class="flex gap-6 snap-x snap-mandatory md:grid md:grid-cols-3">
-    {% for prod in productos_relacionados %}
-    <article
-      class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl flex-none w-[calc(50%-0.75rem)] md:w-auto snap-start"
-    >
-      <div
-        class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider"
+      {% for prod in productos_relacionados %}
+      <article
+        class="group relative bg-white rounded-sm overflow-hidden border border-blue-dark/5 transition-all duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] hover:-translate-y-2 hover:shadow-2xl flex-none w-[calc(50%-0.75rem)] md:w-auto snap-start"
       >
-        Nuevo
-      </div>
-
-      <div
-        class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden"
-      >
-        {% if prod.imagen_principal %}
-        <img
-          src="{{ prod.imagen_principal.url }}"
-          alt="{{ prod.nombre }}"
-          class="max-w-[65%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
-        />
-        {% else %}
-        <img
-          src="{% static 'images/hero.webp' %}"
-          alt="{{ prod.nombre }}"
-          class="max-w-[65%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
-        />
-        {% endif %}
-
         <div
-          class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"
-        ></div>
-      </div>
-
-      <div class="p-8 text-center">
-        <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">
-          {{ prod.nombre }}
-        </h3>
-        <div class="text-red-accent font-bold text-xl mb-6">
-          {{ prod.precio_formateado }}
+          class="absolute top-4 right-4 bg-blue-dark text-white px-2.5 py-1 text-[0.7rem] font-bold z-30 uppercase tracking-wider"
+        >
+          Nuevo
         </div>
 
-        <a
-          href="{% url 'productos:detalle' prod.id %}"
-          class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300"
+        <div
+          class="bg-[#f0f2f5] h-[250px] flex flex-col items-center justify-center relative pt-5 overflow-hidden"
         >
-          Ver Detalles
-        </a>
-      </div>
-    </article>
-    {% endfor %}
+          {% if prod.imagen_principal %}
+          <img
+            src="{{ prod.imagen_principal.url }}"
+            alt="{{ prod.nombre }}"
+            class="max-w-[65%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
+          />
+          {% else %}
+          <img
+            src="{% static 'images/hero.webp' %}"
+            alt="{{ prod.nombre }}"
+            class="max-w-[65%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
+          />
+          {% endif %}
+
+          <div
+            class="absolute bottom-5 w-[60%] h-[15px] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_transparent_70%)] rounded-[50%] z-10"
+          ></div>
+        </div>
+
+        <div class="p-8 text-center">
+          <h3 class="font-heading font-bold text-lg mb-2 text-blue-dark">
+            {{ prod.nombre }}
+          </h3>
+          <div class="text-red-accent font-bold text-xl mb-6">
+            {{ prod.precio_formateado }}
+          </div>
+
+          <a
+            href="{% url 'productos:detalle' prod.id %}"
+            class="inline-block border-2 border-blue-dark text-blue-dark px-6 py-2 text-sm font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-colors duration-300"
+          >
+            Ver Detalles
+          </a>
+        </div>
+      </article>
+      {% endfor %}
     </div>
   </div>
 </section>
