@@ -1,5 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block
-title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% load custom_filters %} 
+{% block title %}{{producto.nombre}} - MotoLuxe{% endblock %} 
+{% block content %}
 
 <!-- Breadcrumb -->
 <nav class="text-sm mb-8">
@@ -164,12 +167,12 @@ title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
           Especificaciones Técnicas
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {% regroup producto.valores_atributos.all by atributo.tipo_producto as
-          atributos_agrupados %}
+          {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
 
           <!-- Atributos generales -->
-          {% for grupo in atributos_agrupados %} {% if grupo.grouper ==
-          'general' %} {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper == 'general' %} 
+          {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-blue-50 px-4 py-3 rounded"
           >
@@ -192,11 +195,14 @@ title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
             >
             {% endif %}
           </div>
-          {% endfor %} {% endif %} {% endfor %}
+          {% endfor %} 
+          {% endif %} 
+          {% endfor %}
 
           <!-- Atributos específicos -->
-          {% for grupo in atributos_agrupados %} {% if grupo.grouper !=
-          'general' %} {% for valor in grupo.list %}
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper != 'general' %} 
+          {% for valor in grupo.list %}
           <div
             class="flex justify-between items-center bg-purple-50 px-4 py-3 rounded"
           >
@@ -207,7 +213,9 @@ title %}{{producto.nombre}} - MotoLuxe{% endblock %} {% block content %}
               >{{ valor.valor_formateado }}</span
             >
           </div>
-          {% endfor %} {% endif %} {% endfor %}
+          {% endfor %} 
+          {% endif %} 
+          {% endfor %}
         </div>
       </div>
       {% endif %}
