@@ -682,3 +682,46 @@ def admin_atributo_eliminar(request, atributo_id):
         'success': True,
         'message': f'Atributo "{nombre}" eliminado exitosamente'
     })
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+def admin_categoria_atributos(request, categoria_id):
+    """Obtener atributos según la categoría (AJAX)"""
+    try:
+        categoria = get_object_or_404(Categoria, id=categoria_id)
+        categoria_nombre = categoria.nombre.lower()
+        
+        # Determinar el tipo de producto basado en la categoría
+        tipo_filtro = 'general'
+        
+        # Agrupar todas las categorías eléctricas
+        if any(keyword in categoria_nombre for keyword in ['electrica', 'eléctrica', 'e-bike', 'ebike', 'bicimoto', 'bici']):
+            tipo_filtro = 'electrica'
+        elif any(keyword in categoria_nombre for keyword in ['combustion', 'combustión', 'moto', 'gasolina']):
+            tipo_filtro = 'combustion'
+        elif 'triciclo' in categoria_nombre:
+            tipo_filtro = 'triciclo'
+        
+        # Obtener atributos generales + específicos del tipo
+        atributos = AtributoDinamico.objects.filter(
+            Q(tipo_producto='general') | Q(tipo_producto=tipo_filtro)
+        ).order_by('orden', 'nombre')
+        
+        atributos_data = [{
+            'id': attr.id,
+            'nombre': attr.nombre,
+            'unidad_medida': attr.unidad_medida or '',
+            'tipo_producto': attr.tipo_producto,
+            'tipo_producto_display': attr.get_tipo_producto_display(),
+        } for attr in atributos]
+        
+        return JsonResponse({
+            'success': True,
+            'atributos': atributos_data,
+            'tipo_producto': tipo_filtro,
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Error al obtener atributos: {str(e)}'
+        }, status=400)

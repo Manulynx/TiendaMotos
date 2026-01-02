@@ -38,4 +38,7 @@ urlpatterns = [
     path('admin-custom/atributos/<int:atributo_id>/editar/', views.admin_atributo_editar, name='admin_atributo_editar'),
     path('admin-custom/atributos/<int:atributo_id>/eliminar/', views.admin_atributo_eliminar, name='admin_atributo_eliminar'),
     path('admin-custom/atributos/obtener/', views.admin_obtener_atributos, name='admin_obtener_atributos'),
+    
+    # Obtener atributos por categoría
+    path('admin-custom/categoria/<int:categoria_id>/atributos/', views.admin_categoria_atributos, name='admin_categoria_atributos'),
 ]

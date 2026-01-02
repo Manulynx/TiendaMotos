@@ -445,12 +445,80 @@ async function eliminarImagen(imagenId) {
 }
 
 // Script para actualizar atributos al cambiar categoría
-document.querySelector('select[name="categoria"]').addEventListener('change', function() {
+document.querySelector('select[name="categoria"]').addEventListener('change', async function() {
   const categoriaId = this.value;
   const productoId = {{ producto.id }};
   
-  if (confirm('¿Deseas recargar los atributos según la nueva categoría? Se perderán los valores no guardados.')) {
-    window.location.href = `?categoria_changed=${categoriaId}`;
+  if (!confirm('¿Deseas recargar los atributos según la nueva categoría? Se perderán los valores de atributos no guardados.')) {
+    return;
+  }
+  
+  try {
+    // Mostrar loader
+    const container = document.getElementById('atributos-container');
+    container.innerHTML = '<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-dark"></div><p class="mt-2 text-sm text-gray-600">Cargando atributos...</p></div>';
+    
+    // Hacer petición para obtener los atributos
+    const response = await fetch(`/productos/admin-custom/categoria/${categoriaId}/atributos/`, {
+      headers: {
+        'X-CSRFToken': csrftoken
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Reconstruir el contenedor de atributos
+      container.innerHTML = '';
+      
+      if (data.atributos.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-gray-500 text-sm">
+            <p>No hay atributos disponibles para esta categoría.</p>
+            <a href="/productos/admin-custom/atributos/crear/" target="_blank" class="text-red-accent hover:text-red-accent/80 font-medium mt-2 inline-block">
+              Crear primer atributo
+            </a>
+          </div>
+        `;
+      } else {
+        data.atributos.forEach(atributo => {
+          const bgClass = atributo.tipo_producto === 'general' ? 'bg-blue-50' : 'bg-purple-50';
+          const textClass = atributo.tipo_producto === 'general' ? 'text-blue-600' : 'text-purple-600';
+          const unidad = atributo.unidad_medida ? `<span class="text-gray-500">(${atributo.unidad_medida})</span>` : '';
+          
+          const div = document.createElement('div');
+          div.className = `flex items-center gap-3 p-3 ${bgClass} rounded-lg`;
+          div.innerHTML = `
+            <div class="flex-1">
+              <label class="text-sm font-medium text-gray-700">
+                ${atributo.nombre}
+                ${unidad}
+                <span class="text-xs ${textClass} ml-2">
+                  ${atributo.tipo_producto_display}
+                </span>
+              </label>
+              <input
+                type="text"
+                name="atributo_${atributo.id}"
+                value=""
+                placeholder="Ingresa el valor..."
+                class="mt-1 w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
+              />
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+      
+      showToast('Atributos actualizados correctamente', 'success');
+    } else {
+      container.innerHTML = '<div class="text-center py-6 text-red-500 text-sm">Error al cargar los atributos</div>';
+      showToast('Error al cargar los atributos', 'error');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('atributos-container').innerHTML = '<div class="text-center py-6 text-red-500 text-sm">Error al cargar los atributos</div>';
+    showToast('Error al cargar los atributos', 'error');
   }
 });
 </script>
