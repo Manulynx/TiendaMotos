@@ -1,6 +1,8 @@
-{% extends 'admin_custom/base.html' %} {% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %} {% block page_subtitle %}Resumen
-general del inventario{% endblock %} {% block content %}
+{% extends 'admin_custom/base.html' %} 
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %} 
+{% block page_subtitle %}Resumen general del inventario{% endblock %} 
+{% block content %}
 <!-- Stats Cards -->
 <div
   class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
@@ -14,15 +16,15 @@ general del inventario{% endblock %} {% block content %}
         <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
           Total Productos
         </p>
-        <h3 class="text-2xl md:text-3xl font-bold text-blue-dark">
+        <h3 class="text-2xl md:text-3xl font-bold text-[#1a2332]">
           {{ total_productos }}
         </h3>
       </div>
       <div
-        class="w-12 h-12 md:w-14 md:h-14 bg-blue-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-gray-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-6 h-6 md:w-7 md:h-7 text-blue-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -47,15 +49,15 @@ general del inventario{% endblock %} {% block content %}
         <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
           Productos Activos
         </p>
-        <h3 class="text-2xl md:text-3xl font-bold text-green-600">
+        <h3 class="text-2xl md:text-3xl font-bold text-[#1a2332]">
           {{ productos_activos }}
         </h3>
       </div>
       <div
-        class="w-12 h-12 md:w-14 md:h-14 bg-green-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-gray-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-6 h-6 md:w-7 md:h-7 text-green-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -80,15 +82,15 @@ general del inventario{% endblock %} {% block content %}
         <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
           Categorías
         </p>
-        <h3 class="text-2xl md:text-3xl font-bold text-purple-600">
+        <h3 class="text-2xl md:text-3xl font-bold text-[#1a2332]">
           {{ total_categorias }}
         </h3>
       </div>
       <div
-        class="w-12 h-12 md:w-14 md:h-14 bg-purple-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-gray-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-6 h-6 md:w-7 md:h-7 text-purple-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -113,15 +115,15 @@ general del inventario{% endblock %} {% block content %}
         <p class="text-xs md:text-sm text-gray-500 font-medium mb-1">
           Atributos
         </p>
-        <h3 class="text-2xl md:text-3xl font-bold text-orange-600">
+        <h3 class="text-2xl md:text-3xl font-bold text-[#1a2332]">
           {{ total_atributos }}
         </h3>
       </div>
       <div
-        class="w-12 h-12 md:w-14 md:h-14 bg-orange-100 rounded-lg flex items-center justify-center"
+        class="w-12 h-12 md:w-14 md:h-14 bg-gray-100 rounded-lg flex items-center justify-center"
       >
         <svg
-          class="w-6 h-6 md:w-7 md:h-7 text-orange-600"
+          class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -142,14 +144,14 @@ general del inventario{% endblock %} {% block content %}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
   <!-- Quick Actions -->
   <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100">
-    <h3 class="text-base md:text-lg font-bold text-blue-dark mb-3 md:mb-4">
+    <h3 class="text-base md:text-lg font-bold text-[#1a2332] mb-3 md:mb-4">
       Acciones Rápidas
     </h3>
 
     <div class="space-y-2 md:space-y-3">
       <a
         href="{% url 'productos:admin_producto_crear' %}"
-        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-red-accent to-red-600 text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
           class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -168,17 +170,12 @@ general del inventario{% endblock %} {% block content %}
             />
           </svg>
         </div>
-        <div>
-          <p class="font-semibold text-sm md:text-base">Nuevo Producto</p>
-          <p class="text-xs text-white/80 hidden sm:block">
-            Agregar al inventario
-          </p>
-        </div>
+        <p class="font-semibold text-sm md:text-base">Nuevo Producto</p>
       </a>
 
       <a
         href="{% url 'productos:admin_productos_lista' %}"
-        class="flex items-center gap-3 p-3 md:p-4 bg-blue-dark text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-[#1a2332] text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
           class="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -197,20 +194,15 @@ general del inventario{% endblock %} {% block content %}
             />
           </svg>
         </div>
-        <div>
-          <p class="font-semibold text-sm md:text-base">Ver Productos</p>
-          <p class="text-xs text-white/70 hidden sm:block">
-            Gestionar inventario
-          </p>
-        </div>
+        <p class="font-semibold text-sm md:text-base">Ver Productos</p>
       </a>
 
       <a
         href="{% url 'productos:admin_categorias_lista' %}"
-        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-[#1a2332] text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
-          class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
         >
           <svg
             class="w-5 h-5 md:w-6 md:h-6"
@@ -226,20 +218,15 @@ general del inventario{% endblock %} {% block content %}
             />
           </svg>
         </div>
-        <div>
-          <p class="font-semibold text-sm md:text-base">Categorías</p>
-          <p class="text-xs text-white/80 hidden sm:block">
-            Organizar productos
-          </p>
-        </div>
+        <p class="font-semibold text-sm md:text-base">Categorías</p>
       </a>
 
       <a
         href="{% url 'productos:admin_atributos_lista' %}"
-        class="flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:shadow-lg transition-all group"
+        class="flex items-center gap-3 p-3 md:p-4 bg-[#1a2332] text-white rounded-lg hover:shadow-lg transition-all group"
       >
         <div
-          class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+          class="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
         >
           <svg
             class="w-5 h-5 md:w-6 md:h-6"
@@ -255,12 +242,7 @@ general del inventario{% endblock %} {% block content %}
             />
           </svg>
         </div>
-        <div>
-          <p class="font-semibold text-sm md:text-base">Atributos</p>
-          <p class="text-xs text-white/80 hidden sm:block">
-            Gestionar atributos
-          </p>
-        </div>
+        <p class="font-semibold text-sm md:text-base">Atributos</p>
       </a>
     </div>
   </div>
