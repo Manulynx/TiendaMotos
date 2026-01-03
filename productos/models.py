@@ -2,6 +2,10 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 import uuid
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 
 class Categoria(models.Model):
@@ -129,9 +133,80 @@ class Producto(models.Model):
         verbose_name_plural = "Productos"
         ordering = ['-fecha_creacion']
     
+    def _redimensionar_imagen(self, imagen_field):
+        """
+        Redimensiona y recorta la imagen a 800x600px manteniendo la proporción
+        """
+        if not imagen_field:
+            return None
+            
+        img = Image.open(imagen_field)
+        
+        # Convertir a RGB si es necesario (para PNGs con transparencia)
+        if img.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            if img.mode == 'P':
+                img = img.convert('RGBA')
+            background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+        
+        # Dimensiones objetivo
+        target_width = 800
+        target_height = 600
+        target_ratio = target_width / target_height
+        
+        # Calcular el ratio de la imagen original
+        img_ratio = img.width / img.height
+        
+        # Redimensionar manteniendo aspecto y recortar
+        if img_ratio > target_ratio:
+            # Imagen más ancha - ajustar por altura
+            new_height = target_height
+            new_width = int(new_height * img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            # Recortar el exceso de ancho
+            left = (new_width - target_width) // 2
+            img = img.crop((left, 0, left + target_width, target_height))
+        else:
+            # Imagen más alta - ajustar por ancho
+            new_width = target_width
+            new_height = int(new_width / img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            # Recortar el exceso de altura
+            top = (new_height - target_height) // 2
+            img = img.crop((0, top, target_width, top + target_height))
+        
+        # Guardar en BytesIO
+        output = BytesIO()
+        img.save(output, format='JPEG', quality=85, optimize=True)
+        output.seek(0)
+        
+        # Crear nuevo archivo
+        return InMemoryUploadedFile(
+            output, 'ImageField',
+            f"{imagen_field.name.split('.')[0]}.jpg",
+            'image/jpeg',
+            sys.getsizeof(output),
+            None
+        )
+    
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = self._generar_sku()
+        
+        # Redimensionar imagen principal si se ha cambiado
+        if self.imagen_principal:
+            try:
+                # Verificar si la imagen ha sido modificada
+                if not self.pk or (self.pk and Producto.objects.filter(pk=self.pk).exists()):
+                    old_instance = Producto.objects.filter(pk=self.pk).first() if self.pk else None
+                    if not old_instance or old_instance.imagen_principal != self.imagen_principal:
+                        self.imagen_principal = self._redimensionar_imagen(self.imagen_principal)
+            except Exception as e:
+                print(f"Error al redimensionar imagen: {e}")
+        
         super().save(*args, **kwargs)
     
     def _generar_sku(self):
@@ -180,6 +255,73 @@ class ImagenProducto(models.Model):
         verbose_name = "Imagen de Producto"
         verbose_name_plural = "Imágenes de Productos"
         ordering = ['orden', 'fecha_subida']
+    
+    def _redimensionar_imagen(self, imagen_field):
+        """
+        Redimensiona y recorta la imagen a 800x600px manteniendo la proporción
+        """
+        if not imagen_field:
+            return None
+            
+        img = Image.open(imagen_field)
+        
+        # Convertir a RGB si es necesario
+        if img.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            if img.mode == 'P':
+                img = img.convert('RGBA')
+            background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+        
+        # Dimensiones objetivo
+        target_width = 800
+        target_height = 600
+        target_ratio = target_width / target_height
+        
+        # Calcular el ratio de la imagen original
+        img_ratio = img.width / img.height
+        
+        # Redimensionar manteniendo aspecto y recortar
+        if img_ratio > target_ratio:
+            new_height = target_height
+            new_width = int(new_height * img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            left = (new_width - target_width) // 2
+            img = img.crop((left, 0, left + target_width, target_height))
+        else:
+            new_width = target_width
+            new_height = int(new_width / img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            top = (new_height - target_height) // 2
+            img = img.crop((0, top, target_width, top + target_height))
+        
+        # Guardar en BytesIO
+        output = BytesIO()
+        img.save(output, format='JPEG', quality=85, optimize=True)
+        output.seek(0)
+        
+        return InMemoryUploadedFile(
+            output, 'ImageField',
+            f"{imagen_field.name.split('.')[0]}.jpg",
+            'image/jpeg',
+            sys.getsizeof(output),
+            None
+        )
+    
+    def save(self, *args, **kwargs):
+        # Redimensionar imagen de galería
+        if self.imagen:
+            try:
+                if not self.pk or (self.pk and ImagenProducto.objects.filter(pk=self.pk).exists()):
+                    old_instance = ImagenProducto.objects.filter(pk=self.pk).first() if self.pk else None
+                    if not old_instance or old_instance.imagen != self.imagen:
+                        self.imagen = self._redimensionar_imagen(self.imagen)
+            except Exception as e:
+                print(f"Error al redimensionar imagen: {e}")
+        
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"Imagen de {self.producto.nombre} (#{self.orden})"
