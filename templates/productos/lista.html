@@ -334,6 +334,7 @@
         <article
           class="group relative bg-white rounded-lg overflow-hidden border border-gray-200 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
         >
+          <a href="{% url 'productos:detalle' producto.id %}" aria-label="Ver detalles de {{ producto.nombre }}" class="absolute inset-0 z-20"></a>
           <!-- Badge de Estado -->
           <div class="absolute top-4 right-4 z-30 flex flex-col gap-2">
             <span class="bg-blue-dark text-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider shadow-lg">
@@ -352,13 +353,13 @@
             <img
               src="{{ producto.imagen_principal.url }}"
               alt="{{ producto.nombre }}"
-              class="max-w-[70%] max-h-[90%] object-contain z-20 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+              class="max-w-[70%] max-h-[90%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
             />
             {% else %}
             <img
               src="{% static 'images/hero.webp' %}"
               alt="{{ producto.nombre }}"
-              class="max-w-[70%] max-h-[90%] object-contain z-20 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+              class="max-w-[70%] max-h-[90%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
             />
             {% endif %}
             
@@ -388,7 +389,7 @@
               <!-- Botón de Acción -->
               <a
                 href="{% url 'productos:detalle' producto.id %}"
-                class="block text-center border-2 border-blue-dark text-blue-dark px-6 py-2.5 text-sm font-semibold uppercase tracking-wide hover:bg-blue-dark hover:text-white transition-all duration-300 rounded"
+                class="block relative z-40 text-center border-2 border-blue-dark text-blue-dark px-6 py-2.5 text-sm font-semibold uppercase tracking-wide hover:bg-blue-dark hover:text-white transition-all duration-300 rounded"
               >
                 Ver Detalles
               </a>
