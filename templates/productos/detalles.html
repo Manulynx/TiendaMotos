@@ -37,21 +37,21 @@
     <div class="space-y-4">
       <!-- Imagen Principal -->
       <div
-        class="bg-[#f0f2f5] rounded-sm p-8 flex items-center justify-center min-h-[400px] relative overflow-hidden"
+        class="bg-[#e8ebf2] rounded-sm p-8 flex items-center justify-center h-[500px] relative overflow-hidden"
       >
         {% if producto.imagen_principal %}
         <img
           id="imagen-principal"
           src="{{ producto.imagen_principal.url }}"
           alt="{{ producto.nombre }}"
-          class="max-w-full max-h-[450px] object-contain transition-transform duration-300 hover:scale-105"
+          class="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
         />
         {% else %}
         <img
           id="imagen-principal"
           src="{% static 'images/hero.webp' %}"
           alt="{{ producto.nombre }}"
-          class="max-w-full max-h-[450px] object-contain"
+          class="w-full h-full object-contain"
         />
         {% endif %}
 
@@ -68,23 +68,23 @@
         {% if producto.imagen_principal %}
         <button
           onclick="cambiarImagen('{{ producto.imagen_principal.url }}')"
-          class="bg-[#f0f2f5] rounded-sm p-3 hover:ring-2 hover:ring-blue-dark transition-all cursor-pointer border-2 border-blue-dark"
+          class="bg-[#e8ebf2] rounded-sm p-3 hover:ring-2 hover:ring-blue-dark transition-all cursor-pointer border-2 border-blue-dark h-24 flex items-center justify-center"
         >
           <img
             src="{{ producto.imagen_principal.url }}"
             alt="Principal"
-            class="w-full h-20 object-contain"
+            class="w-full h-full object-contain"
           />
         </button>
         {% endif %} {% for imagen in producto.galeria_imagenes.all %}
         <button
           onclick="cambiarImagen('{{ imagen.imagen.url }}')"
-          class="bg-[#f0f2f5] rounded-sm p-3 hover:ring-2 hover:ring-blue-dark transition-all cursor-pointer"
+          class="bg-[#e8ebf2] rounded-sm p-3 hover:ring-2 hover:ring-blue-dark transition-all cursor-pointer h-24 flex items-center justify-center"
         >
           <img
             src="{{ imagen.imagen.url }}"
             alt="{{ imagen.descripcion }}"
-            class="w-full h-20 object-contain"
+            class="w-full h-full object-contain"
           />
         </button>
         {% endfor %}
@@ -154,20 +154,25 @@
         </div>
       </div>
       {% endif %}
+    </div>
+  </div>
 
-      <!-- Especificaciones Técnicas -->
-      {% if producto.valores_atributos.all %}
-      <div class="border-t border-gray-200 pt-6">
-        <h3 class="font-heading font-bold text-xl mb-4 text-blue-dark">
-          Especificaciones Técnicas
-        </h3>
-        <div class="grid grid-cols-1 gap-3">
+  <!-- Especificaciones, Descripción y Botones (debajo de galería) -->
+  <div class="mt-12 space-y-8">
+    <!-- Especificaciones Técnicas -->
+    {% if producto.valores_atributos.all %}
+    <div class="border-t border-gray-200 pt-6">
+      <h3 class="font-heading font-bold text-xl mb-4 text-blue-dark">
+        Especificaciones Técnicas
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           {% regroup producto.valores_atributos.all by atributo.tipo_producto as atributos_agrupados %}
 
-          <!-- Atributos generales -->
+          <!-- Atributos generales (excepto Garantía y Mensajería) -->
           {% for grupo in atributos_agrupados %} 
           {% if grupo.grouper == 'general' %} 
           {% for valor in grupo.list %}
+          {% if valor.atributo.nombre != 'Garantía' and valor.atributo.nombre != 'Mensajería' %}
           <div
             class="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-blue-50 px-4 py-3 rounded gap-1 sm:gap-2"
           >
@@ -190,6 +195,7 @@
             >
             {% endif %}
           </div>
+          {% endif %}
           {% endfor %} 
           {% endif %} 
           {% endfor %}
@@ -211,6 +217,26 @@
           {% endfor %} 
           {% endif %} 
           {% endfor %}
+
+          <!-- Garantía y Mensajería al final -->
+          {% for grupo in atributos_agrupados %} 
+          {% if grupo.grouper == 'general' %} 
+          {% for valor in grupo.list %}
+          {% if valor.atributo.nombre == 'Garantía' or valor.atributo.nombre == 'Mensajería' %}
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-blue-50 px-4 py-3 rounded gap-1 sm:gap-2"
+          >
+            <span class="font-semibold text-gray-700 text-sm sm:text-base"
+              >{{ valor.atributo.nombre }}</span
+            >
+            <span class="text-blue-dark font-bold text-sm sm:text-base"
+              >{{ valor.valor_formateado }}</span
+            >
+          </div>
+          {% endif %}
+          {% endfor %} 
+          {% endif %} 
+          {% endfor %}
         </div>
       </div>
       {% endif %}
@@ -228,15 +254,17 @@
       {% endif %}
 
       <!-- Botones de Acción -->
-      <div class="border-t border-gray-200 pt-6 space-y-3 pb-24 lg:pb-0">
-        <!-- Botón WhatsApp - Sticky en móvil -->
-        <a
-          href="https://wa.me/{{ whatsapp_numero }}?text={{ mensaje_whatsapp|urlencode }}"
-          target="_blank"
-          class="flex items-center justify-center gap-3 bg-[#25D366] text-white px-6 sm:px-8 py-4 text-sm sm:text-base font-bold uppercase tracking-wider hover:bg-[#20BA5A] transition-all duration-300 rounded shadow-lg hover:shadow-xl group fixed lg:static bottom-0 left-0 right-0 z-50 lg:z-auto m-4 lg:m-0"
-        >
+      <div class="border-t border-gray-200 pt-6 pb-6">
+        <div class="grid md:grid-cols-2 gap-3 max-w-xl ml-auto">
+          <!-- Botón WhatsApp -->
+          <a
+            href="https://wa.me/{{ whatsapp_numero }}?text={{ mensaje_whatsapp|urlencode }}"
+            target="_blank"
+            class="relative flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-6 py-3.5 text-sm font-semibold tracking-wide transition-all duration-500 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 hover:from-[#20BA5A] hover:to-[#0E7A6B] group overflow-hidden"
+          >
+          <span class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
           <svg
-            class="w-6 h-6 transition-transform group-hover:scale-110"
+            class="w-5 h-5 relative z-10 transition-transform group-hover:rotate-12 group-hover:scale-110"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -244,16 +272,17 @@
               d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
             />
           </svg>
-          Contactar por WhatsApp
+          <span class="relative z-10">Contactar por WhatsApp</span>
         </a>
 
         <!-- Botón Volver -->
         <a
           href="{% url 'productos:lista' %}"
-          class="flex items-center justify-center gap-2 border-2 border-blue-dark text-blue-dark px-8 py-4 text-base font-bold uppercase tracking-wider hover:bg-blue-dark hover:text-white transition-all duration-300 rounded"
+          class="relative flex items-center justify-center gap-2.5 bg-white text-blue-dark px-6 py-3.5 text-sm font-semibold tracking-wide transition-all duration-500 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 group overflow-hidden border-2 border-blue-dark hover:border-transparent hover:bg-gradient-to-r hover:from-blue-dark hover:to-[#243447] hover:text-white"
         >
+          <span class="absolute inset-0 bg-gradient-to-r from-blue-dark/0 via-blue-dark/10 to-blue-dark/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
           <svg
-            class="w-5 h-5"
+            class="w-5 h-5 relative z-10 transition-transform group-hover:-translate-x-1"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -265,8 +294,9 @@
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          Volver al Catálogo
+          <span class="relative z-10">Volver al Catálogo</span>
         </a>
+        </div>
       </div>
     </div>
   </div>

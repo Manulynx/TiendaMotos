@@ -20,13 +20,16 @@
 
 <section class="py-8">
   <!-- Header del Catálogo -->
-  <div class="mb-10">
-    <h1 class="text-4xl font-heading font-bold text-blue-dark mb-3 text-center">
-      Catálogo de Productos
-    </h1>
-    <p class="text-gray-600 text-center max-w-2xl mx-auto">
-      Explora nuestra colección de motos y e-bikes de alta gama con las mejores especificaciones del mercado.
-    </p>
+  <div class="grid lg:grid-cols-[280px_1fr] gap-8 mb-10">
+    <div class="hidden lg:block"></div>
+    <div>
+      <h1 class="text-4xl font-heading font-bold text-blue-dark mb-3 text-center">
+        Catálogo de Productos
+      </h1>
+      <p class="text-gray-600 text-center max-w-2xl mx-auto">
+        Explora nuestra colección de motos y e-bikes de alta gama con las mejores especificaciones del mercado.
+      </p>
+    </div>
   </div>
 
   <!-- Botón de Filtros para Móvil -->
@@ -209,6 +212,12 @@
             <option value="nombre" {% if request.GET.ordenar == 'nombre' %}selected{% endif %}>
               Nombre: A-Z
             </option>
+            <option value="popular" {% if request.GET.ordenar == 'popular' %}selected{% endif %}>
+              Más Popular
+            </option>
+            <option value="mas_vendido" {% if request.GET.ordenar == 'mas_vendido' %}selected{% endif %}>
+              Más Vendido
+            </option>
           </select>
         </div>
 
@@ -216,24 +225,46 @@
         <div class="mt-6 lg:pt-4 lg:border-t lg:border-gray-200">
           <!-- Botones para móvil - fijos en bottom -->
           <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
-            <div class="flex gap-3">
+            <div class="flex flex-col gap-3">
               <button 
-                type="submit"
-                class="flex-1 bg-blue-dark text-white px-4 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all hover:shadow-lg text-base"
+                type="button"
+                id="resetear-filtros-mobile"
+                class="hidden w-full bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg font-semibold hover:bg-gray-200 transition-all text-base items-center justify-center gap-2"
               >
-                Aplicar Filtros
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Resetear Filtros
               </button>
-              <a 
-                href="{% url 'productos:lista' %}"
-                class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all text-base flex items-center justify-center"
-              >
-                Limpiar
-              </a>
+              <div class="flex gap-3">
+                <button 
+                  type="submit"
+                  class="flex-1 bg-blue-dark text-white px-4 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all hover:shadow-lg text-base"
+                >
+                  Aplicar Filtros
+                </button>
+                <a 
+                  href="{% url 'productos:lista' %}"
+                  class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all text-base flex items-center justify-center"
+                >
+                  Limpiar
+                </a>
+              </div>
             </div>
           </div>
           
           <!-- Botones para desktop - normales -->
-          <div class="hidden lg:flex gap-2">
+          <div class="hidden lg:flex flex-col gap-2">
+            <button 
+              type="button"
+              id="resetear-filtros-desktop"
+              class="hidden w-full bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg font-semibold hover:bg-gray-200 transition-all text-base items-center justify-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Resetear Filtros
+            </button>
             <button 
               type="submit"
               class="flex-1 bg-blue-dark text-white px-4 py-2.5 rounded-lg font-semibold hover:bg-opacity-90 transition-all hover:shadow-lg text-base"
@@ -286,6 +317,12 @@
             </option>
             <option value="nombre" {% if request.GET.ordenar == 'nombre' %}selected{% endif %}>
               Nombre: A-Z
+            </option>
+            <option value="popular" {% if request.GET.ordenar == 'popular' %}selected{% endif %}>
+              Más Popular
+            </option>
+            <option value="mas_vendido" {% if request.GET.ordenar == 'mas_vendido' %}selected{% endif %}>
+              Más Vendido
             </option>
           </select>
         </form>
@@ -348,7 +385,7 @@
           </div>
 
           <!-- Imagen del Producto -->
-          <div class="bg-gradient-to-br from-gray-50 to-gray-100 h-[280px] flex items-center justify-center relative overflow-hidden">
+          <div class="bg-[#e8ebf2] h-[280px] flex items-center justify-center relative overflow-hidden">
             {% if producto.imagen_principal %}
             <img
               src="{{ producto.imagen_principal.url }}"
@@ -513,14 +550,163 @@
     });
   }
 
-  // Cerrar filtros después de aplicar en móvil
+  // Función para resetear todos los filtros
+  function resetearFiltros() {
+    const form = document.getElementById('filtros-form');
+    
+    // Limpiar campo de búsqueda
+    const busqueda = document.getElementById('busqueda');
+    if (busqueda) busqueda.value = '';
+    
+    // Restablecer categoría a "Todas"
+    const categoriaRadios = form.querySelectorAll('input[name="categoria"]');
+    categoriaRadios.forEach(radio => {
+      radio.checked = radio.value === '';
+    });
+    
+    // Restablecer slider de precio
+    const slider = document.getElementById('price-slider');
+    if (slider && slider.noUiSlider) {
+      slider.noUiSlider.set([0, {{ precio_max_db|floatformat:0 }}]);
+    }
+    
+    // Desmarcar todos los colores
+    const colorCheckboxes = form.querySelectorAll('input[name="color"]');
+    colorCheckboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Restablecer ordenar
+    const ordenar = document.getElementById('ordenar');
+    if (ordenar) ordenar.value = '';
+    
+    // Verificar filtros activos después de resetear
+    verificarFiltrosActivos();
+    
+    console.log('Filtros reseteados correctamente');
+  }
+
+  // Función para verificar si hay filtros activos
+  function verificarFiltrosActivos() {
+    const form = document.getElementById('filtros-form');
+    const resetearMobile = document.getElementById('resetear-filtros-mobile');
+    const resetearDesktop = document.getElementById('resetear-filtros-desktop');
+    
+    let hayFiltros = false;
+    
+    // Verificar búsqueda
+    const busqueda = document.getElementById('busqueda');
+    if (busqueda && busqueda.value.trim() !== '') {
+      hayFiltros = true;
+    }
+    
+    // Verificar categoría
+    const categoriaRadios = form.querySelectorAll('input[name="categoria"]:checked');
+    if (categoriaRadios.length > 0 && categoriaRadios[0].value !== '') {
+      hayFiltros = true;
+    }
+    
+    // Verificar precio
+    const precioMin = document.getElementById('precio_min');
+    const precioMax = document.getElementById('precio_max');
+    const maxPrice = {{ precio_max_db|floatformat:0 }};
+    if (precioMin && precioMax) {
+      if (parseInt(precioMin.value) > 0 || parseInt(precioMax.value) < maxPrice) {
+        hayFiltros = true;
+      }
+    }
+    
+    // Verificar colores
+    const colorCheckboxes = form.querySelectorAll('input[name="color"]:checked');
+    if (colorCheckboxes.length > 0) {
+      hayFiltros = true;
+    }
+    
+    // Verificar ordenar
+    const ordenar = document.getElementById('ordenar');
+    if (ordenar && ordenar.value !== '') {
+      hayFiltros = true;
+    }
+    
+    // Mostrar u ocultar botones
+    if (hayFiltros) {
+      if (resetearMobile) {
+        resetearMobile.classList.remove('hidden');
+        resetearMobile.classList.add('flex');
+      }
+      if (resetearDesktop) {
+        resetearDesktop.classList.remove('hidden');
+        resetearDesktop.classList.add('flex');
+      }
+    } else {
+      if (resetearMobile) {
+        resetearMobile.classList.add('hidden');
+        resetearMobile.classList.remove('flex');
+      }
+      if (resetearDesktop) {
+        resetearDesktop.classList.add('hidden');
+        resetearDesktop.classList.remove('flex');
+      }
+    }
+  }
+
+  // Verificar al cargar la página
+  verificarFiltrosActivos();
+
+  // Escuchar cambios en los filtros
   const form = document.getElementById('filtros-form');
-  const applyButton = form.querySelector('button[type="submit"]');
+  if (form) {
+    // Búsqueda
+    const busqueda = document.getElementById('busqueda');
+    if (busqueda) {
+      busqueda.addEventListener('input', verificarFiltrosActivos);
+    }
+    
+    // Categorías
+    const categoriaRadios = form.querySelectorAll('input[name="categoria"]');
+    categoriaRadios.forEach(radio => {
+      radio.addEventListener('change', verificarFiltrosActivos);
+    });
+    
+    // Colores
+    const colorCheckboxes = form.querySelectorAll('input[name="color"]');
+    colorCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', verificarFiltrosActivos);
+    });
+    
+    // Ordenar
+    const ordenar = document.getElementById('ordenar');
+    if (ordenar) {
+      ordenar.addEventListener('change', verificarFiltrosActivos);
+    }
+    
+    // Slider (ya está configurado arriba)
+    const slider = document.getElementById('price-slider');
+    if (slider && slider.noUiSlider) {
+      slider.noUiSlider.on('change', verificarFiltrosActivos);
+    }
+  }
+
+  // Botón resetear filtros móvil
+  const resetearMobile = document.getElementById('resetear-filtros-mobile');
+  if (resetearMobile) {
+    resetearMobile.addEventListener('click', resetearFiltros);
+  }
+
+  // Botón resetear filtros desktop
+  const resetearDesktop = document.getElementById('resetear-filtros-desktop');
+  if (resetearDesktop) {
+    resetearDesktop.addEventListener('click', resetearFiltros);
+  }
+
+  // Cerrar filtros después de aplicar en móvil
+  const applyButton = form ? form.querySelector('button[type="submit"]') : null;
   
   if (applyButton) {
     applyButton.addEventListener('click', () => {
       if (window.innerWidth < 1024) {
         setTimeout(() => {
+          const panelFiltros = document.getElementById('panel-filtros');
           if (panelFiltros) {
             panelFiltros.classList.add('hidden');
             panelFiltros.classList.remove('mobile-open');

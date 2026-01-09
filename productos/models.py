@@ -121,6 +121,18 @@ class Producto(models.Model):
         verbose_name="Imagen Principal"
     )
     
+    # Estadísticas
+    vistas = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0)],
+        verbose_name="Número de Vistas"
+    )
+    ventas = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0)],
+        verbose_name="Unidades Vendidas"
+    )
+    
     # Estado
     es_activo = models.BooleanField(default=True, verbose_name="Activo")
     
@@ -135,7 +147,8 @@ class Producto(models.Model):
     
     def _redimensionar_imagen(self, imagen_field):
         """
-        Redimensiona y recorta la imagen a 800x600px manteniendo la proporción
+        Redimensiona la imagen a 800x600px manteniendo la proporción
+        sin recortar, agregando padding si es necesario
         """
         if not imagen_field:
             return None
@@ -155,32 +168,32 @@ class Producto(models.Model):
         # Dimensiones objetivo
         target_width = 800
         target_height = 600
-        target_ratio = target_width / target_height
         
         # Calcular el ratio de la imagen original
         img_ratio = img.width / img.height
+        target_ratio = target_width / target_height
         
-        # Redimensionar manteniendo aspecto y recortar
+        # Redimensionar manteniendo aspecto (sin recortar)
         if img_ratio > target_ratio:
-            # Imagen más ancha - ajustar por altura
-            new_height = target_height
-            new_width = int(new_height * img_ratio)
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            # Recortar el exceso de ancho
-            left = (new_width - target_width) // 2
-            img = img.crop((left, 0, left + target_width, target_height))
-        else:
-            # Imagen más alta - ajustar por ancho
+            # Imagen más ancha - ajustar por ancho
             new_width = target_width
-            new_height = int(new_width / img_ratio)
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            # Recortar el exceso de altura
-            top = (new_height - target_height) // 2
-            img = img.crop((0, top, target_width, top + target_height))
+            new_height = int(target_width / img_ratio)
+        else:
+            # Imagen más alta - ajustar por altura
+            new_height = target_height
+            new_width = int(target_height * img_ratio)
+        
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        
+        # Crear lienzo con fondo azul difuminado y centrar la imagen
+        final_img = Image.new('RGB', (target_width, target_height), (232, 235, 242))  # Color azul difuminado #e8ebf2
+        paste_x = (target_width - new_width) // 2
+        paste_y = (target_height - new_height) // 2
+        final_img.paste(img, (paste_x, paste_y))
         
         # Guardar en BytesIO
         output = BytesIO()
-        img.save(output, format='JPEG', quality=85, optimize=True)
+        final_img.save(output, format='JPEG', quality=85, optimize=True)
         output.seek(0)
         
         # Crear nuevo archivo
@@ -258,7 +271,8 @@ class ImagenProducto(models.Model):
     
     def _redimensionar_imagen(self, imagen_field):
         """
-        Redimensiona y recorta la imagen a 800x600px manteniendo la proporción
+        Redimensiona la imagen a 800x600px manteniendo la proporción
+        sin recortar, agregando padding si es necesario
         """
         if not imagen_field:
             return None
@@ -278,28 +292,32 @@ class ImagenProducto(models.Model):
         # Dimensiones objetivo
         target_width = 800
         target_height = 600
-        target_ratio = target_width / target_height
         
         # Calcular el ratio de la imagen original
         img_ratio = img.width / img.height
+        target_ratio = target_width / target_height
         
-        # Redimensionar manteniendo aspecto y recortar
+        # Redimensionar manteniendo aspecto (sin recortar)
         if img_ratio > target_ratio:
-            new_height = target_height
-            new_width = int(new_height * img_ratio)
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            left = (new_width - target_width) // 2
-            img = img.crop((left, 0, left + target_width, target_height))
-        else:
+            # Imagen más ancha - ajustar por ancho
             new_width = target_width
-            new_height = int(new_width / img_ratio)
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            top = (new_height - target_height) // 2
-            img = img.crop((0, top, target_width, top + target_height))
+            new_height = int(target_width / img_ratio)
+        else:
+            # Imagen más alta - ajustar por altura
+            new_height = target_height
+            new_width = int(target_height * img_ratio)
+        
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        
+        # Crear lienzo con fondo azul difuminado y centrar la imagen
+        final_img = Image.new('RGB', (target_width, target_height), (232, 235, 242))  # Color azul difuminado #e8ebf2
+        paste_x = (target_width - new_width) // 2
+        paste_y = (target_height - new_height) // 2
+        final_img.paste(img, (paste_x, paste_y))
         
         # Guardar en BytesIO
         output = BytesIO()
-        img.save(output, format='JPEG', quality=85, optimize=True)
+        final_img.save(output, format='JPEG', quality=85, optimize=True)
         output.seek(0)
         
         return InMemoryUploadedFile(

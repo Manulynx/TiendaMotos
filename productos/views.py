@@ -81,6 +81,10 @@ def lista(request):
         productos = productos.order_by('-precio_venta')
     elif ordenar == 'nombre':
         productos = productos.order_by('nombre')
+    elif ordenar == 'popular':
+        productos = productos.order_by('-vistas', '-fecha_creacion')
+    elif ordenar == 'mas_vendido':
+        productos = productos.order_by('-ventas', '-fecha_creacion')
     else:
         productos = productos.order_by('-fecha_creacion')
     
@@ -187,7 +191,8 @@ def admin_dashboard(request):
     """Dashboard principal del panel de administración"""
     total_productos = Producto.objects.count()
     productos_activos = Producto.objects.filter(es_activo=True).count()
-    categorias_count = Categoria.objects.count()
+    total_categorias = Categoria.objects.count()
+    total_atributos = AtributoDinamico.objects.count()
     productos_sin_stock = Producto.objects.filter(stock_actual=0).count()
     
     productos_recientes = Producto.objects.select_related('categoria').order_by('-fecha_creacion')[:5]
@@ -195,7 +200,8 @@ def admin_dashboard(request):
     context = {
         'total_productos': total_productos,
         'productos_activos': productos_activos,
-        'categorias_count': categorias_count,
+        'total_categorias': total_categorias,
+        'total_atributos': total_atributos,
         'productos_sin_stock': productos_sin_stock,
         'productos_recientes': productos_recientes,
     }
