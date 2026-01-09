@@ -4,31 +4,21 @@
 {% block page_subtitle %}Resumen general del inventario{% endblock %} 
 {% block content %}
 
-<!-- DEBUG: Bordes para visualizar áreas Nestor puta-->
-<style>
-  .debug-stats { border: 3px solid red; }
-  .debug-stat-card { border: 3px solid orange; }
-  .debug-actions-container { border: 3px solid blue; }
-  .debug-action-card { border: 3px solid cyan; }
-  .debug-recent-products { border: 3px solid green; }
-  .debug-product-item { border: 3px solid purple; }
-</style>
-
 <!-- Quick Actions & Recent Products -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
   <!-- Quick Actions -->
-  <div class="debug-actions-container space-y-3 md:space-y-4">
+  <div class="space-y-2">
       <a
         href="{% url 'productos:admin_producto_crear' %}"
-        class="debug-action-card relative block bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group border border-gray-100"
+        class="debug-action-card relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
       >
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-5 md:p-6 flex items-center gap-4">
-          <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+        <div class="relative p-3 flex items-center gap-3">
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
             <svg
-              class="w-6 h-6 md:w-7 md:h-7 text-emerald-600"
+              class="w-5 h-5 text-emerald-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -42,10 +32,10 @@
             </svg>
           </div>
           <div class="flex-1">
-            <p class="text-white font-bold text-base md:text-lg tracking-wide">Nuevo Producto</p>
-            <p class="text-emerald-50 text-xs md:text-sm mt-0.5">Agregar al inventario</p>
+            <p class="text-white font-semibold text-sm">Nuevo Producto</p>
+            <p class="text-emerald-50 text-xs mt-0.5">Agregar al inventario</p>
           </div>
-          <svg class="w-5 h-5 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </div>
@@ -53,15 +43,15 @@
 
       <a
         href="{% url 'productos:admin_productos_lista' %}"
-        class="debug-action-card relative block bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group border border-gray-100"
+        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
       >
         <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-5 md:p-6 flex items-center gap-4">
-          <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+        <div class="relative p-3 flex items-center gap-3">
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
             <svg
-              class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
+              class="w-5 h-5 text-[#1a2332]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -75,10 +65,10 @@
             </svg>
           </div>
           <div class="flex-1">
-            <p class="text-white font-bold text-base md:text-lg tracking-wide">Ver Productos</p>
-            <p class="text-blue-100 text-xs md:text-sm mt-0.5">Gestionar inventario</p>
+            <p class="text-white font-semibold text-sm">Ver Productos</p>
+            <p class="text-blue-100 text-xs mt-0.5">Gestionar inventario</p>
           </div>
-          <svg class="w-5 h-5 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </div>
@@ -86,15 +76,15 @@
 
       <a
         href="{% url 'productos:admin_categorias_lista' %}"
-        class="debug-action-card relative block bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group border border-gray-100"
+        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
       >
         <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-5 md:p-6 flex items-center gap-4">
-          <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+        <div class="relative p-3 flex items-center gap-3">
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
             <svg
-              class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
+              class="w-5 h-5 text-[#1a2332]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -108,10 +98,10 @@
             </svg>
           </div>
           <div class="flex-1">
-            <p class="text-white font-bold text-base md:text-lg tracking-wide">Categorías</p>
-            <p class="text-blue-100 text-xs md:text-sm mt-0.5">Organizar productos</p>
+            <p class="text-white font-semibold text-sm">Categorías</p>
+            <p class="text-blue-100 text-xs mt-0.5">Organizar productos</p>
           </div>
-          <svg class="w-5 h-5 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </div>
@@ -119,15 +109,15 @@
 
       <a
         href="{% url 'productos:admin_atributos_lista' %}"
-        class="debug-action-card relative block bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group border border-gray-100"
+        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
       >
         <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-5 md:p-6 flex items-center gap-4">
-          <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+        <div class="relative p-3 flex items-center gap-3">
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
             <svg
-              class="w-6 h-6 md:w-7 md:h-7 text-[#1a2332]"
+              class="w-5 h-5 text-[#1a2332]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -141,10 +131,10 @@
             </svg>
           </div>
           <div class="flex-1">
-            <p class="text-white font-bold text-base md:text-lg tracking-wide">Atributos</p>
-            <p class="text-blue-100 text-xs md:text-sm mt-0.5">Propiedades dinámicas</p>
+            <p class="text-white font-semibold text-sm">Atributos</p>
+            <p class="text-blue-100 text-xs mt-0.5">Propiedades dinámicas</p>
           </div>
-          <svg class="w-5 h-5 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </div>
@@ -153,7 +143,7 @@
 
   <!-- Recent Products -->
   <div
-    class="debug-recent-products lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100"
+    class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100"
   >
     <div class="p-4 md:p-6 border-b border-gray-100">
       <h3 class="text-base md:text-lg font-bold text-blue-dark">
@@ -163,7 +153,7 @@
 
     <div class="divide-y divide-gray-100">
       {% for producto in productos_recientes %}
-      <div class="debug-product-item p-3 md:p-4 hover:bg-gray-50 transition-colors">
+      <div class="p-3 md:p-4 hover:bg-gray-50 transition-colors">
         <div class="flex items-center gap-3 md:gap-4">
           <div
             class="w-12 h-12 md:w-16 md:h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden"
@@ -266,11 +256,11 @@
 
 <!-- Stats Cards -->
 <div
-  class="debug-stats grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mt-6"
+  class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mt-6"
 >
   <!-- Total Productos -->
   <div
-    class="debug-stat-card bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
+    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
   >
     <div class="flex flex-col">
       <div class="flex items-center justify-between mb-2">
@@ -301,7 +291,7 @@
 
   <!-- Productos Activos -->
   <div
-    class="debug-stat-card bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
+    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
   >
     <div class="flex flex-col">
       <div class="flex items-center justify-between mb-2">
@@ -332,7 +322,7 @@
 
   <!-- Categorías -->
   <div
-    class="debug-stat-card bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
+    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
   >
     <div class="flex flex-col">
       <div class="flex items-center justify-between mb-2">
@@ -363,7 +353,7 @@
 
   <!-- Atributos -->
   <div
-    class="debug-stat-card bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
+    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
   >
     <div class="flex flex-col">
       <div class="flex items-center justify-between mb-2">
