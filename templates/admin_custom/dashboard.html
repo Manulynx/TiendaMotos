@@ -25,9 +25,9 @@
 </div>
 
 <!-- Overview metrics -->
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mt-4">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4 mt-4 md:mt-6">
   <!-- Total Productos -->
-  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+  <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
     <div class="flex items-center justify-between">
       <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
         <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
@@ -38,7 +38,7 @@
   </div>
 
   <!-- Productos Activos -->
-  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+  <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
     <div class="flex items-center justify-between">
       <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
         <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -49,7 +49,7 @@
   </div>
 
   <!-- Categorías -->
-  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+  <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
     <div class="flex items-center justify-between">
       <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
         <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
@@ -60,7 +60,7 @@
   </div>
 
   <!-- Atributos -->
-  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+  <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
     <div class="flex items-center justify-between">
       <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
         <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
@@ -71,7 +71,7 @@
   </div>
 
   <!-- Sin stock -->
-  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+  <div class="bg-white rounded-lg shadow-sm p-3 md:p-4 border border-gray-100">
     <div class="flex items-center justify-between">
       <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
         <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
@@ -82,13 +82,18 @@
   </div>
 </div>
 
-<!-- Recent Products (table) -->
+<!-- Recent Products -->
 <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100">
   <div class="p-4 md:p-5 border-b border-gray-100 flex items-center justify-between">
-    <h3 class="text-base md:text-lg font-bold text-[#1a2332]">Productos recientes</h3>
-    <a href="{% url 'productos:admin_productos_lista' %}" class="text-sm text-blue-600 hover:text-blue-700">Ver todos</a>
+    <div>
+      <h3 class="text-base md:text-lg font-bold text-[#1a2332]">Últimos 5 productos</h3>
+      <p class="text-xs text-gray-500 mt-0.5">Agregados o editados recientemente</p>
+    </div>
+    <a href="{% url 'productos:admin_productos_lista' %}" class="text-xs md:text-sm text-blue-600 hover:text-blue-700 font-medium">Ver todo el inventario</a>
   </div>
-  <div class="overflow-x-auto">
+  
+  <!-- Desktop table view -->
+  <div class="hidden md:block overflow-x-auto">
     <table class="w-full text-left">
       <thead>
         <tr class="text-xs text-gray-500">
@@ -140,6 +145,48 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+  
+  <!-- Mobile card view -->
+  <div class="md:hidden">
+    {% for producto in productos_recientes %}
+    <div class="p-4 border-b border-gray-100 last:border-b-0">
+      <div class="flex gap-3">
+        <!-- Imagen -->
+        <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+          {% if producto.imagen_principal %}
+          <img src="{{ producto.imagen_principal.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover"/>
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-gray-400">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Información -->
+        <div class="flex-1 min-w-0">
+          <h4 class="font-semibold text-gray-900 text-sm mb-1 truncate">{{ producto.nombre }}</h4>
+          <p class="text-xs text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
+          
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-base font-bold text-[#1a2332]">{{ producto.precio_formateado }}</span>
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium {% if producto.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+              {% if producto.es_activo %}Activo{% else %}Inactivo{% endif %}
+            </span>
+          </div>
+          
+          <a href="{% url 'productos:admin_producto_editar' producto.id %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Editar producto
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="p-6 text-center text-gray-500 text-sm">
+      No hay productos registrados
+    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

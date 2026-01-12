@@ -195,7 +195,8 @@ def admin_dashboard(request):
     total_atributos = AtributoDinamico.objects.count()
     productos_sin_stock = Producto.objects.filter(stock_actual=0).count()
     
-    productos_recientes = Producto.objects.select_related('categoria').order_by('-fecha_creacion')[:5]
+    # Últimos 5 productos agregados/editados
+    productos_recientes = Producto.objects.select_related('categoria').order_by('-fecha_actualizacion', '-fecha_creacion')[:5]
     
     context = {
         'total_productos': total_productos,
