@@ -4,382 +4,142 @@
 {% block page_subtitle %}Resumen general del inventario{% endblock %} 
 {% block content %}
 
-<!-- Quick Actions & Recent Products -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-  <!-- Quick Actions -->
-  <div class="space-y-2">
-      <a
-        href="{% url 'productos:admin_producto_crear' %}"
-        class="debug-action-card relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
-            <svg
-              class="w-5 h-5 text-emerald-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-white font-semibold text-sm">Nuevo Producto</p>
-            <p class="text-emerald-50 text-xs mt-0.5">Agregar al inventario</p>
-          </div>
-          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </a>
-
-      <a
-        href="{% url 'productos:admin_productos_lista' %}"
-        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
-            <svg
-              class="w-5 h-5 text-[#1a2332]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-                d="M4 6h16M4 10h16M4 14h16M4 18h16"
-              />
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-white font-semibold text-sm">Ver Productos</p>
-            <p class="text-blue-100 text-xs mt-0.5">Gestionar inventario</p>
-          </div>
-          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </a>
-
-      <a
-        href="{% url 'productos:admin_categorias_lista' %}"
-        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
-            <svg
-              class="w-5 h-5 text-[#1a2332]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-              />
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-white font-semibold text-sm">Categorías</p>
-            <p class="text-blue-100 text-xs mt-0.5">Organizar productos</p>
-          </div>
-          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </a>
-
-      <a
-        href="{% url 'productos:admin_atributos_lista' %}"
-        class="relative block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100"
-      >
-        <div class="absolute inset-0 bg-gradient-to-br from-[#1a2332] via-[#243447] to-[#2d3f54] opacity-90 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <span class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-        <div class="relative p-3 flex items-center gap-3">
-          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
-            <svg
-              class="w-5 h-5 text-[#1a2332]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-              />
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-white font-semibold text-sm">Atributos</p>
-            <p class="text-blue-100 text-xs mt-0.5">Propiedades dinámicas</p>
-          </div>
-          <svg class="w-4 h-4 text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </a>
-  </div>
-
-  <!-- Recent Products -->
-  <div
-    class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100"
-  >
-    <div class="p-4 md:p-6 border-b border-gray-100">
-      <h3 class="text-base md:text-lg font-bold text-blue-dark">
-        Productos Recientes
-      </h3>
-    </div>
-
-    <div class="divide-y divide-gray-100">
-      {% for producto in productos_recientes %}
-      <div class="p-3 md:p-4 hover:bg-gray-50 transition-colors">
-        <div class="flex items-center gap-3 md:gap-4">
-          <div
-            class="w-12 h-12 md:w-16 md:h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden"
-          >
-            {% if producto.imagen_principal %}
-            <img
-              src="{{ producto.imagen_principal.url }}"
-              alt="{{ producto.nombre }}"
-              class="w-full h-full object-cover"
-            />
-            {% else %}
-            <div
-              class="w-full h-full flex items-center justify-center text-gray-400"
-            >
-              <svg
-                class="w-6 h-6 md:w-8 md:h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="flex-1 min-w-0">
-            <h4
-              class="font-semibold text-sm md:text-base text-gray-900 truncate"
-            >
-              {{ producto.nombre }}
-            </h4>
-            <p class="text-xs md:text-sm text-gray-500">
-              {{ producto.categoria.nombre }}
-            </p>
-            <p class="text-xs md:text-sm font-bold text-red-accent mt-1">
-              {{ producto.precio_formateado }}
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <span
-              class="px-2 md:px-3 py-1 rounded-full text-xs font-medium {% if producto.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}"
-            >
-              {% if producto.es_activo %}<span class="hidden sm:inline"
-                >Activo</span
-              ><span class="sm:hidden">✓</span>{% else %}<span
-                class="hidden sm:inline"
-                >Inactivo</span
-              ><span class="sm:hidden">✕</span>{% endif %}
-            </span>
-
-            <a
-              href="{% url 'productos:admin_producto_editar' producto.id %}"
-              class="p-1.5 md:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <div class="p-8 text-center text-gray-500">
-        <svg
-          class="w-12 h-12 mx-auto mb-3 text-gray-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-          />
-        </svg>
-        <p>No hay productos registrados</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+<!-- Quick Actions (compact) -->
+<div class="flex flex-wrap gap-2 md:gap-3">
+  <a href="{% url 'productos:admin_producto_crear' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    <span class="text-sm font-semibold">Nuevo producto</span>
+  </a>
+  <a href="{% url 'productos:admin_productos_lista' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-[#1a2332] text-white rounded-lg hover:bg-[#121a26] transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+    <span class="text-sm font-semibold">Ver productos</span>
+  </a>
+  <a href="{% url 'productos:admin_categorias_lista' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-[#2d3f54] text-white rounded-lg hover:bg-[#243447] transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+    <span class="text-sm font-semibold">Categorías</span>
+  </a>
+  <a href="{% url 'productos:admin_atributos_lista' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-[#2d3f54] text-white rounded-lg hover:bg-[#243447] transition">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+    <span class="text-sm font-semibold">Atributos</span>
+  </a>
 </div>
 
-<!-- Stats Cards -->
-<div
-  class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mt-6"
->
+<!-- Overview metrics -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mt-4">
   <!-- Total Productos -->
-  <div
-    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
-  >
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <svg
-            class="w-4 h-4 text-[#1a2332]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-            />
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-[#1a2332]">
-          {{ total_productos }}
-        </h3>
+  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
       </div>
-      <p class="text-xs text-gray-500 font-medium">
-        Total Productos
-      </p>
+      <h3 class="text-xl font-bold text-[#1a2332]">{{ total_productos }}</h3>
     </div>
+    <p class="mt-1 text-xs text-gray-500 font-medium">Total productos</p>
   </div>
 
   <!-- Productos Activos -->
-  <div
-    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
-  >
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <svg
-            class="w-4 h-4 text-[#1a2332]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-[#1a2332]">
-          {{ productos_activos }}
-        </h3>
+  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
-      <p class="text-xs text-gray-500 font-medium">
-        Productos Activos
-      </p>
+      <h3 class="text-xl font-bold text-[#1a2332]">{{ productos_activos }}</h3>
     </div>
+    <p class="mt-1 text-xs text-gray-500 font-medium">Productos activos</p>
   </div>
 
   <!-- Categorías -->
-  <div
-    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
-  >
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <svg
-            class="w-4 h-4 text-[#1a2332]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-            />
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-[#1a2332]">
-          {{ total_categorias }}
-        </h3>
+  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
       </div>
-      <p class="text-xs text-gray-500 font-medium">
-        Categorías
-      </p>
+      <h3 class="text-xl font-bold text-[#1a2332]">{{ total_categorias }}</h3>
     </div>
+    <p class="mt-1 text-xs text-gray-500 font-medium">Categorías</p>
   </div>
 
   <!-- Atributos -->
-  <div
-    class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 card-hover"
-  >
-    <div class="flex flex-col">
-      <div class="flex items-center justify-between mb-2">
-        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <svg
-            class="w-4 h-4 text-[#1a2332]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-            />
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-[#1a2332]">
-          {{ total_atributos }}
-        </h3>
+  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4 text-[#1a2332]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
       </div>
-      <p class="text-xs text-gray-500 font-medium">
-        Atributos
-      </p>
+      <h3 class="text-xl font-bold text-[#1a2332]">{{ total_atributos }}</h3>
     </div>
+    <p class="mt-1 text-xs text-gray-500 font-medium">Atributos</p>
+  </div>
+
+  <!-- Sin stock -->
+  <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+      </div>
+      <h3 class="text-xl font-bold text-red-700">{{ productos_sin_stock }}</h3>
+    </div>
+    <p class="mt-1 text-xs text-red-600 font-medium">Productos sin stock</p>
+  </div>
+</div>
+
+<!-- Recent Products (table) -->
+<div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100">
+  <div class="p-4 md:p-5 border-b border-gray-100 flex items-center justify-between">
+    <h3 class="text-base md:text-lg font-bold text-[#1a2332]">Productos recientes</h3>
+    <a href="{% url 'productos:admin_productos_lista' %}" class="text-sm text-blue-600 hover:text-blue-700">Ver todos</a>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left">
+      <thead>
+        <tr class="text-xs text-gray-500">
+          <th class="px-4 py-3">Imagen</th>
+          <th class="px-4 py-3">Producto</th>
+          <th class="px-4 py-3">Categoría</th>
+          <th class="px-4 py-3">Precio</th>
+          <th class="px-4 py-3">Estado</th>
+          <th class="px-4 py-3 text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for producto in productos_recientes %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3">
+            <div class="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden">
+              {% if producto.imagen_principal %}
+              <img src="{{ producto.imagen_principal.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover"/>
+              {% else %}
+              <div class="w-full h-full flex items-center justify-center text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              {% endif %}
+            </div>
+          </td>
+          <td class="px-4 py-3">
+            <div class="max-w-[220px] truncate font-medium text-gray-900">{{ producto.nombre }}</div>
+          </td>
+          <td class="px-4 py-3 text-gray-600">{{ producto.categoria.nombre }}</td>
+          <td class="px-4 py-3 font-semibold text-[#1a2332]">{{ producto.precio_formateado }}</td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-1 rounded-full text-xs font-medium {% if producto.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+              {% if producto.es_activo %}Activo{% else %}Inactivo{% endif %}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <a href="{% url 'productos:admin_producto_editar' producto.id %}" class="inline-flex items-center gap-1 px-2 py-1.5 text-blue-600 hover:bg-blue-50 rounded-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              <span class="text-xs font-medium">Editar</span>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="px-4 py-6 text-center text-gray-500">
+            No hay productos registrados
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}
