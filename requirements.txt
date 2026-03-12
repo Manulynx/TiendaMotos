@@ -3,3 +3,6 @@ Django==5.2.10
 pillow==12.1.0
 sqlparse==0.5.5
 tzdata==2025.3
+gunicorn
+whitenoise
+psycopg[binary]
