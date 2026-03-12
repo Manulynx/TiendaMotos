@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-oow*)ra*=#g=akwmz&li%oe)i4q%qur$*d1rk(m8@0w7jyo9&d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com',
+                 'tiendamotos-production.up.railway.app', 
+                 'localhost', '127.0.0.1']
 
 
 # Application definition
