@@ -116,13 +116,7 @@
               Especificaciones Técnicas
               <span class="text-xs text-purple-600 ml-2">({{ tipo_producto|title }})</span>
             </label>
-            <a
-              href="{% url 'productos:admin_atributos_lista' %}"
-              target="_blank"
-              class="text-xs text-blue-600 hover:text-blue-700 font-medium"
-            >
-              + Gestionar atributos
-            </a>
+            
           </div>
           
           <div id="atributos-container" class="space-y-3">
@@ -134,9 +128,7 @@
                   {% if atributo.unidad_medida %}
                   <span class="text-gray-500">({{ atributo.unidad_medida }})</span>
                   {% endif %}
-                  <span class="text-xs {% if atributo.tipo_producto == 'general' %}text-blue-600{% else %}text-purple-600{% endif %} ml-2">
-                    {{ atributo.get_tipo_producto_display }}
-                  </span>
+                  
                 </label>
                 <input
                   type="text"
