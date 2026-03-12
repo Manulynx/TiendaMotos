@@ -7,3 +7,4 @@ gunicorn
 whitenoise
 psycopg[binary]
 cloudinary 
+django-cloudinary-storage
