@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-oow*)ra*=#g=akwmz&li%oe)i4q%qur$*d1rk(m8@0w7jyo9&d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com',
                  'tiendamotos-production.up.railway.app', 
@@ -42,10 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    "cloudinary_storage",
     'django.contrib.staticfiles',
     "cloudinary",
-    "cloudinary_storage",
-    "django.contrib.staticfiles",
     'productos',
 ]
 
@@ -128,7 +127,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+if os.environ.get('ENVIRONMENT') == 'production':
+    STATICFILES_STORAGE = "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
+else:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
