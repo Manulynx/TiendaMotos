@@ -6,3 +6,4 @@ tzdata==2025.3
 gunicorn
 whitenoise
 psycopg[binary]
+cloudinary django-cloudinary-storage

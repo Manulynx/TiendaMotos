@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +30,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com',
                  'tiendamotos-production.up.railway.app', 
                  'localhost', '127.0.0.1']
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://tiendamotos-production.up.railway.app"
+]
 
 # Application definition
 
@@ -39,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "cloudinary",
+    "cloudinary_storage",
+    "django.contrib.staticfiles",
     'productos',
 ]
 
@@ -71,6 +78,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'TiendaMotos.wsgi.application'
+
 
 
 # Database
@@ -124,6 +132,12 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+)
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 
 
