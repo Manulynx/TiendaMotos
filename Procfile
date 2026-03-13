@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py createsuperuserenv && python manage.py poblar_atributos && python manage.py poblar_colores && python manage.py collectstatic --noinput && gunicorn TiendaMotos.wsgi
+web: python manage.py migrate && python manage.py createsuperuserenv && python manage.py poblar_atributos && python manage.py poblar_colores && python manage.py collectstatic --noinput && python manage.py limpiar_atributos_colores --atributos && gunicorn TiendaMotos.wsgi
