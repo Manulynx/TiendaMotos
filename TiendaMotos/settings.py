@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-oow*)ra*=#g=akwmz&li%oe)i4q%qur$*d1rk(m8@0w7jyo9&d')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com',
                  'tiendamotos-production.up.railway.app', 
