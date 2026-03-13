@@ -325,7 +325,7 @@ def admin_producto_crear(request):
     
     # Obtener atributos generales para el formulario inicial
     atributos_disponibles = AtributoDinamico.objects.filter(
-        tipo_producto='general'
+        categorias__isnull=True
     ).order_by('orden', 'nombre')
     
     context = {
@@ -388,23 +388,10 @@ def admin_producto_editar(request, producto_id):
     colores = Color.objects.filter(es_activo=True).order_by('orden')
     imagenes_galeria = producto.galeria_imagenes.all()
     
-    # Determinar el tipo de producto basado en la categoría
-    categoria_nombre = producto.categoria.nombre.lower()
-    
-    tipo_filtro = 'general'
-    
-    # Agrupar todas las categorías eléctricas
-    if any(keyword in categoria_nombre for keyword in ['electrica', 'eléctrica', 'e-bike', 'ebike', 'bicimoto', 'bici']):
-        tipo_filtro = 'electrica'
-    elif any(keyword in categoria_nombre for keyword in ['combustion', 'combustión', 'moto', 'gasolina']):
-        tipo_filtro = 'combustion'
-    elif 'triciclo' in categoria_nombre:
-        tipo_filtro = 'triciclo'
-    
-    # Obtener atributos generales + específicos del tipo
+    # Obtener atributos: los que aplican a la categoría del producto + los generales (sin categoría)
     atributos_disponibles = AtributoDinamico.objects.filter(
-        Q(tipo_producto='general') | Q(tipo_producto=tipo_filtro)
-    ).order_by('orden', 'nombre')
+        Q(categorias__isnull=True) | Q(categorias=producto.categoria)
+    ).distinct().order_by('orden', 'nombre')
     
     valores_actuales = {v.atributo_id: v.valor for v in producto.valores_atributos.all()}
     
@@ -415,7 +402,6 @@ def admin_producto_editar(request, producto_id):
         'imagenes_galeria': imagenes_galeria,
         'atributos_disponibles': atributos_disponibles,
         'valores_actuales': valores_actuales,
-        'tipo_producto': tipo_filtro,
     }
     return render(request, 'admin_custom/producto_editar.html', context)
         
@@ -504,35 +490,22 @@ def admin_obtener_atributos(request):
     
     try:
         categoria = Categoria.objects.get(id=categoria_id)
-        categoria_nombre = categoria.nombre.lower()
         
-        # Determinar tipo de producto
-        tipo_filtro = 'general'
-        
-        # Agrupar todas las categorías eléctricas (Motos Eléctricas, E-Bikes, Bicimotos)
-        if any(keyword in categoria_nombre for keyword in ['electrica', 'eléctrica', 'e-bike', 'ebike', 'bicimoto', 'bici']):
-            tipo_filtro = 'electrica'
-        elif any(keyword in categoria_nombre for keyword in ['combustion', 'combustión', 'moto', 'gasolina']):
-            tipo_filtro = 'combustion'
-        elif 'triciclo' in categoria_nombre:
-            tipo_filtro = 'triciclo'
-        
-        # Obtener atributos generales + específicos
+        # Obtener atributos que aplican a esta categoría + los generales (sin categoría)
         atributos = AtributoDinamico.objects.filter(
-            Q(tipo_producto='general') | Q(tipo_producto=tipo_filtro)
-        ).order_by('orden', 'nombre')
+            Q(categorias__isnull=True) | Q(categorias=categoria)
+        ).distinct().order_by('orden', 'nombre')
         
         atributos_data = [{
             'id': attr.id,
             'nombre': attr.nombre,
             'unidad_medida': attr.unidad_medida or '',
-            'tipo_producto': attr.get_tipo_producto_display()
+            'categorias': ', '.join(c.nombre for c in attr.categorias.all()) or 'Todas'
         } for attr in atributos]
         
         return JsonResponse({
             'success': True,
             'atributos': atributos_data,
-            'tipo_producto': tipo_filtro
         })
         
     except Categoria.DoesNotExist:
@@ -619,7 +592,7 @@ def admin_categoria_eliminar(request, categoria_id):
 @staff_member_required(login_url='/productos/admin-custom/login/')
 def admin_atributos_lista(request):
     """Lista de atributos dinámicos"""
-    atributos = AtributoDinamico.objects.all().order_by('tipo_producto', 'orden', 'nombre')
+    atributos = AtributoDinamico.objects.prefetch_related('categorias').all().order_by('orden', 'nombre')
     
     context = {'atributos': atributos}
     return render(request, 'admin_custom/atributos_lista.html', context)
@@ -630,23 +603,26 @@ def admin_atributo_crear(request):
     """Crear atributo dinámico"""
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        tipo_producto = request.POST.get('tipo_producto')
+        categorias_ids = request.POST.getlist('categorias')
         unidad_medida = request.POST.get('unidad_medida', '')
         descripcion = request.POST.get('descripcion', '')
         orden = request.POST.get('orden', 0)
         
-        AtributoDinamico.objects.create(
+        atributo = AtributoDinamico.objects.create(
             nombre=nombre,
-            tipo_producto=tipo_producto,
             unidad_medida=unidad_medida,
             descripcion=descripcion,
             orden=orden
         )
+        if categorias_ids:
+            atributo.categorias.set(categorias_ids)
         
         messages.success(request, f'Atributo "{nombre}" creado exitosamente')
         return redirect('productos:admin_atributos_lista')
     
-    return render(request, 'admin_custom/atributo_crear.html')
+    categorias = Categoria.objects.all().order_by('nombre')
+    context = {'categorias': categorias}
+    return render(request, 'admin_custom/atributo_crear.html', context)
 
 
 @staff_member_required(login_url='/productos/admin-custom/login/')
@@ -656,16 +632,18 @@ def admin_atributo_editar(request, atributo_id):
     
     if request.method == 'POST':
         atributo.nombre = request.POST.get('nombre')
-        atributo.tipo_producto = request.POST.get('tipo_producto')
+        categorias_ids = request.POST.getlist('categorias')
         atributo.unidad_medida = request.POST.get('unidad_medida', '')
         atributo.descripcion = request.POST.get('descripcion', '')
         atributo.orden = request.POST.get('orden', 0)
         atributo.save()
+        atributo.categorias.set(categorias_ids)
         
         messages.success(request, 'Atributo actualizado exitosamente')
         return redirect('productos:admin_atributos_lista')
     
-    context = {'atributo': atributo}
+    categorias = Categoria.objects.all().order_by('nombre')
+    context = {'atributo': atributo, 'categorias': categorias}
     return render(request, 'admin_custom/atributo_editar.html', context)
 
 
@@ -696,36 +674,22 @@ def admin_categoria_atributos(request, categoria_id):
     """Obtener atributos según la categoría (AJAX)"""
     try:
         categoria = get_object_or_404(Categoria, id=categoria_id)
-        categoria_nombre = categoria.nombre.lower()
         
-        # Determinar el tipo de producto basado en la categoría
-        tipo_filtro = 'general'
-        
-        # Agrupar todas las categorías eléctricas
-        if any(keyword in categoria_nombre for keyword in ['electrica', 'eléctrica', 'e-bike', 'ebike', 'bicimoto', 'bici']):
-            tipo_filtro = 'electrica'
-        elif any(keyword in categoria_nombre for keyword in ['combustion', 'combustión', 'moto', 'gasolina']):
-            tipo_filtro = 'combustion'
-        elif 'triciclo' in categoria_nombre:
-            tipo_filtro = 'triciclo'
-        
-        # Obtener atributos generales + específicos del tipo
+        # Obtener atributos que aplican a esta categoría + los generales (sin categoría)
         atributos = AtributoDinamico.objects.filter(
-            Q(tipo_producto='general') | Q(tipo_producto=tipo_filtro)
-        ).order_by('orden', 'nombre')
+            Q(categorias__isnull=True) | Q(categorias=categoria)
+        ).distinct().order_by('orden', 'nombre')
         
         atributos_data = [{
             'id': attr.id,
             'nombre': attr.nombre,
             'unidad_medida': attr.unidad_medida or '',
-            'tipo_producto': attr.tipo_producto,
-            'tipo_producto_display': attr.get_tipo_producto_display(),
+            'categorias': ', '.join(c.nombre for c in attr.categorias.all()) or 'Todas',
         } for attr in atributos]
         
         return JsonResponse({
             'success': True,
             'atributos': atributos_data,
-            'tipo_producto': tipo_filtro,
         })
     except Exception as e:
         return JsonResponse({
@@ -756,3 +720,90 @@ def admin_hero_config(request):
         'config': config,
     }
     return render(request, 'admin_custom/hero_config.html', context)
+
+
+# ===== VISTAS PARA COLORES =====
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+def admin_colores_lista(request):
+    """Lista de colores"""
+    colores = Color.objects.all().order_by('orden', 'nombre')
+    context = {'colores': colores}
+    return render(request, 'admin_custom/colores_lista.html', context)
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+def admin_color_crear(request):
+    """Crear color"""
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        codigo_hex = request.POST.get('codigo_hex', '').strip()
+        orden = request.POST.get('orden', 0)
+        es_activo = request.POST.get('es_activo') == 'on'
+
+        if not nombre or not codigo_hex:
+            return JsonResponse({'success': False, 'message': 'Nombre y código hex son obligatorios'})
+
+        if Color.objects.filter(nombre=nombre).exists():
+            return JsonResponse({'success': False, 'message': f'Ya existe un color con el nombre "{nombre}"'})
+
+        Color.objects.create(
+            nombre=nombre,
+            codigo_hex=codigo_hex,
+            orden=orden or 0,
+            es_activo=es_activo,
+        )
+
+        return JsonResponse({'success': True, 'message': f'Color "{nombre}" creado exitosamente'})
+
+    return render(request, 'admin_custom/color_crear.html')
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+def admin_color_editar(request, color_id):
+    """Editar color"""
+    color = get_object_or_404(Color, id=color_id)
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        codigo_hex = request.POST.get('codigo_hex', '').strip()
+        orden = request.POST.get('orden', 0)
+        es_activo = request.POST.get('es_activo') == 'on'
+
+        if not nombre or not codigo_hex:
+            return JsonResponse({'success': False, 'message': 'Nombre y código hex son obligatorios'})
+
+        if Color.objects.filter(nombre=nombre).exclude(id=color_id).exists():
+            return JsonResponse({'success': False, 'message': f'Ya existe un color con el nombre "{nombre}"'})
+
+        color.nombre = nombre
+        color.codigo_hex = codigo_hex
+        color.orden = orden or 0
+        color.es_activo = es_activo
+        color.save()
+
+        return JsonResponse({'success': True, 'message': f'Color "{nombre}" actualizado exitosamente'})
+
+    context = {'color': color}
+    return render(request, 'admin_custom/color_editar.html', context)
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+@require_POST
+def admin_color_eliminar(request, color_id):
+    """Eliminar color (AJAX)"""
+    color = get_object_or_404(Color, id=color_id)
+
+    if color.productos.exists():
+        return JsonResponse({
+            'success': False,
+            'message': f'No se puede eliminar. {color.productos.count()} productos usan este color'
+        })
+
+    nombre = color.nombre
+    color.delete()
+
+    return JsonResponse({
+        'success': True,
+        'message': f'Color "{nombre}" eliminado exitosamente'
+    })

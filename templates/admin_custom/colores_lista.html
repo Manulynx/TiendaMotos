@@ -1,66 +1,38 @@
-{% extends 'admin_custom/base.html' %} {% block title %}Atributos Dinámicos{%
-endblock %} {% block page_title %}Atributos Dinámicos{% endblock %} {% block
-page_subtitle %}Gestión de atributos personalizables para productos{% endblock%}
-{% block content %}
-<!-- Barra de acciones -->
-<div class="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-4 md:mb-6">
-  <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-  >
-    <!-- Búsqueda -->
-    <form method="GET" class="flex-1 max-w-md">
-      <div class="relative">
-        <input
-          type="text"
-          name="q"
-          value="{{ query }}"
-          placeholder="Buscar atributos..."
-          class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
-        />
-        <svg
-          class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </div>
-    </form>
+{% extends 'admin_custom/base.html' %} {% block title %}Colores{% endblock %} {%
+block page_title %}Gestión de Colores{% endblock %} {% block page_subtitle
+%}Administra los colores disponibles para productos{% endblock %} {% block
+content %}
 
-    <!-- Botón Nuevo Atributo -->
-    <a
-      href="{% url 'productos:admin_atributo_crear' %}"
-      class="inline-flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 bg-red-accent hover:bg-red-accent/90 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md whitespace-nowrap"
-    >
-      <svg
-        class="w-5 h-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 4v16m8-8H4"
-        />
-      </svg>
-      <span class="hidden sm:inline">Nuevo Atributo</span>
-      <span class="sm:hidden">Nuevo</span>
-    </a>
-  </div>
+<!-- Header -->
+<div
+  class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6"
+>
+  <p class="text-sm md:text-base text-gray-600">
+    Total de colores:
+    <span class="font-bold text-blue-dark">{{ colores.count }}</span>
+  </p>
+  <a
+    href="{% url 'productos:admin_color_crear' %}"
+    class="w-full sm:w-auto px-4 md:px-6 py-2.5 text-sm bg-red-accent text-white rounded-lg hover:bg-red-accent/90 transition-all font-semibold flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 4v16m8-8H4"
+      />
+    </svg>
+    <span class="hidden sm:inline">Nuevo Color</span>
+    <span class="sm:hidden">Nuevo</span>
+  </a>
 </div>
 
-<!-- Lista de Atributos -->
+<!-- Lista de Colores -->
 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-  {% if atributos %}
-  <!-- Vista Desktop: Tabla -->
+  {% if colores %}
+
+  <!-- Desktop Table -->
   <div class="hidden md:block overflow-x-auto">
     <table class="w-full">
       <thead class="bg-gray-50 border-b border-gray-200">
@@ -68,27 +40,27 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
           <th
             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            Nombre
+            Color
           </th>
           <th
             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            Categorías
+            Código Hex
           </th>
           <th
             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            Unidad de Medida
+            Orden
           </th>
           <th
             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            Descripción
+            Estado
           </th>
           <th
             class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
           >
-            Valores Asociados
+            Productos
           </th>
           <th
             class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
@@ -98,53 +70,48 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        {% for atributo in atributos %}
+        {% for color in colores %}
         <tr class="hover:bg-gray-50 transition-colors">
           <td class="px-6 py-4">
-            <div class="font-semibold text-gray-900">{{ atributo.nombre }}</div>
-          </td>
-          <td class="px-6 py-4">
-            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in
-            cats %}
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-1 mb-1"
-              >{{ cat.nombre }}</span
-            >
-            {% endfor %} {% else %}
-            <span
-              class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-              >Todas</span
-            >
-            {% endif %} {% endwith %}
-          </td>
-          <td class="px-6 py-4">
-            <span
-              class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-            >
-              {{ atributo.unidad_medida|default:"Sin unidad" }}
-            </span>
-          </td>
-          <td class="px-6 py-4">
-            <div class="text-sm text-gray-600 max-w-xs truncate">
-              {{ atributo.descripcion|default:"Sin descripción" }}
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-full border-2 border-gray-200 shadow-inner"
+                style="background-color: {{ color.codigo_hex }};"
+              ></div>
+              <span class="font-semibold text-gray-900"
+                >{{ color.nombre }}</span
+              >
             </div>
+          </td>
+          <td class="px-6 py-4">
+            <code class="px-2 py-1 bg-gray-100 rounded text-sm text-gray-700"
+              >{{ color.codigo_hex }}</code
+            >
+          </td>
+          <td class="px-6 py-4 text-gray-600">{{ color.orden }}</td>
+          <td class="px-6 py-4">
+            <span
+              class="px-2.5 py-1 rounded-full text-xs font-medium {% if color.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}"
+            >
+              {% if color.es_activo %}Activo{% else %}Inactivo{% endif %}
+            </span>
           </td>
           <td class="px-6 py-4">
             <span
               class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
             >
-              {{ atributo.valores.count }} productos
+              {{ color.productos.count }} productos
             </span>
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center justify-center gap-2">
               <a
-                href="{% url 'productos:admin_atributo_editar' atributo.id %}"
+                href="{% url 'productos:admin_color_editar' color.id %}"
                 class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 title="Editar"
               >
                 <svg
-                  class="w-5 h-5"
+                  class="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -158,12 +125,12 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
                 </svg>
               </a>
               <button
-                onclick="confirmarEliminar({{ atributo.id }}, '{{ atributo.nombre }}')"
+                onclick="confirmarEliminar({{ color.id }}, '{{ color.nombre }}')"
                 class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 title="Eliminar"
               >
                 <svg
-                  class="w-5 h-5"
+                  class="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -184,53 +151,31 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
     </table>
   </div>
 
-  <!-- Vista Mobile: Cards -->
+  <!-- Mobile Cards -->
   <div class="md:hidden divide-y divide-gray-200">
-    {% for atributo in atributos %}
+    {% for color in colores %}
     <div class="p-4 hover:bg-gray-50 transition-colors">
       <div class="flex items-start justify-between gap-3 mb-3">
-        <div class="flex-1 min-w-0">
-          <h3 class="font-semibold text-gray-900 mb-1">
-            {{ atributo.nombre }}
-          </h3>
-          <div class="flex items-center gap-2 mb-2">
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-            >
-              {{ atributo.unidad_medida|default:"Sin unidad" }}
-            </span>
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-            >
-              {{ atributo.valores.count }} productos
-            </span>
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full border-2 border-gray-200 shadow-inner flex-shrink-0"
+            style="background-color: {{ color.codigo_hex }};"
+          ></div>
+          <div>
+            <h3 class="font-semibold text-gray-900">{{ color.nombre }}</h3>
+            <code class="text-xs text-gray-500">{{ color.codigo_hex }}</code>
           </div>
-          <div class="flex flex-wrap gap-1 mb-2">
-            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in
-            cats %}
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-              >{{ cat.nombre }}</span
-            >
-            {% endfor %} {% else %}
-            <span
-              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
-              >Todas las categorías</span
-            >
-            {% endif %} {% endwith %}
-          </div>
-          {% if atributo.descripcion %}
-          <p class="text-sm text-gray-600 line-clamp-2">
-            {{ atributo.descripcion }}
-          </p>
-          {% endif %}
         </div>
+        <span
+          class="px-2 py-0.5 rounded-full text-xs font-medium {% if color.es_activo %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}"
+        >
+          {% if color.es_activo %}Activo{% else %}Inactivo{% endif %}
+        </span>
       </div>
-
       <div class="flex items-center gap-2">
         <a
-          href="{% url 'productos:admin_atributo_editar' atributo.id %}"
-          class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          href="{% url 'productos:admin_color_editar' color.id %}"
+          class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm"
         >
           <svg
             class="w-4 h-4"
@@ -248,8 +193,8 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
           Editar
         </a>
         <button
-          onclick="confirmarEliminar({{ atributo.id }}, '{{ atributo.nombre }}')"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+          onclick="confirmarEliminar({{ color.id }}, '{{ color.nombre }}')"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors text-sm"
         >
           <svg
             class="w-4 h-4"
@@ -273,7 +218,7 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
   {% else %}
   <div class="p-8 md:p-12 text-center">
     <svg
-      class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-gray-300"
+      class="w-16 h-16 mx-auto mb-4 text-gray-300"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -282,17 +227,15 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
         stroke-linecap="round"
         stroke-linejoin="round"
         stroke-width="2"
-        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
       />
     </svg>
     <h3 class="text-lg font-semibold text-gray-900 mb-2">
-      No hay atributos registrados
+      No hay colores registrados
     </h3>
-    <p class="text-gray-500 mb-6">
-      Comienza creando tu primer atributo dinámico
-    </p>
+    <p class="text-gray-500 mb-6">Comienza creando tu primer color</p>
     <a
-      href="{% url 'productos:admin_atributo_crear' %}"
+      href="{% url 'productos:admin_color_crear' %}"
       class="inline-flex items-center gap-2 px-6 py-3 bg-red-accent hover:bg-red-accent/90 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
     >
       <svg
@@ -308,7 +251,7 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
           d="M12 4v16m8-8H4"
         />
       </svg>
-      Crear Primer Atributo
+      Crear Primer Color
     </a>
   </div>
   {% endif %}
@@ -343,12 +286,10 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
         <p class="text-sm text-gray-600">Esta acción no se puede deshacer</p>
       </div>
     </div>
-
     <p class="text-gray-700 mb-6">
-      ¿Estás seguro de que deseas eliminar el atributo
-      <strong id="deleteAtributoNombre"></strong>?
+      ¿Estás seguro de que deseas eliminar el color
+      <strong id="deleteColorNombre"></strong>?
     </p>
-
     <div class="flex gap-3">
       <button
         onclick="cerrarModal()"
@@ -367,28 +308,27 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
 </div>
 
 <script>
-  let atributoIdToDelete = null;
+  let colorIdToDelete = null;
 
-  function confirmarEliminar(atributoId, atributoNombre) {
-    atributoIdToDelete = atributoId;
-    document.getElementById("deleteAtributoNombre").textContent =
-      atributoNombre;
+  function confirmarEliminar(colorId, colorNombre) {
+    colorIdToDelete = colorId;
+    document.getElementById("deleteColorNombre").textContent = colorNombre;
     document.getElementById("deleteModal").classList.remove("hidden");
   }
 
   function cerrarModal() {
     document.getElementById("deleteModal").classList.add("hidden");
-    atributoIdToDelete = null;
+    colorIdToDelete = null;
   }
 
   document
     .getElementById("confirmDeleteBtn")
     .addEventListener("click", async function () {
-      if (!atributoIdToDelete) return;
+      if (!colorIdToDelete) return;
 
       try {
         const response = await fetch(
-          `/productos/admin-custom/atributos/${atributoIdToDelete}/eliminar/`,
+          `/productos/admin-custom/colores/${colorIdToDelete}/eliminar/`,
           {
             method: "POST",
             headers: {
@@ -407,19 +347,16 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
           showToast(data.message, "error");
         }
       } catch (error) {
-        showToast("Error al eliminar el atributo", "error");
+        showToast("Error al eliminar el color", "error");
       }
 
       cerrarModal();
     });
 
-  // Cerrar modal al hacer clic fuera
   document
     .getElementById("deleteModal")
     .addEventListener("click", function (e) {
-      if (e.target === this) {
-        cerrarModal();
-      }
+      if (e.target === this) cerrarModal();
     });
 </script>
 {% endblock %}

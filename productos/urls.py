@@ -42,6 +42,12 @@ urlpatterns = [
     # Obtener atributos por categoría
     path('admin-custom/categoria/<int:categoria_id>/atributos/', views.admin_categoria_atributos, name='admin_categoria_atributos'),
 
+    # Colores
+    path('admin-custom/colores/', views.admin_colores_lista, name='admin_colores_lista'),
+    path('admin-custom/colores/crear/', views.admin_color_crear, name='admin_color_crear'),
+    path('admin-custom/colores/<int:color_id>/editar/', views.admin_color_editar, name='admin_color_editar'),
+    path('admin-custom/colores/<int:color_id>/eliminar/', views.admin_color_eliminar, name='admin_color_eliminar'),
+
     # Configuración Home
     path('admin-custom/hero/', views.admin_hero_config, name='admin_hero_config'),
 ]

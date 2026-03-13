@@ -348,20 +348,15 @@ class ImagenProducto(models.Model):
 class AtributoDinamico(models.Model):
     """
     Define atributos personalizables para productos (ej. Voltaje, Autonomía, Cilindrada).
+    Si no tiene categorías asignadas, aplica a todos los productos.
     """
-    TIPOS_PRODUCTO = [
-        ('general', 'General (Todos)'),
-        ('electrica', 'Motos Eléctricas'),
-        ('combustion', 'Motos de Combustión'),
-        ('triciclo', 'Triciclos')
-    ]
-    
-    nombre = models.CharField(max_length=100, verbose_name="Nombre del Atributo")
-    tipo_producto = models.CharField(
-        max_length=20,
-        choices=TIPOS_PRODUCTO,
-        default='general',
-        verbose_name="Tipo de Producto"
+    nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre del Atributo")
+    categorias = models.ManyToManyField(
+        Categoria,
+        related_name='atributos',
+        blank=True,
+        verbose_name="Categorías",
+        help_text="Dejar vacío para que aplique a todos los productos"
     )
     unidad_medida = models.CharField(
         max_length=20,
@@ -384,11 +379,13 @@ class AtributoDinamico(models.Model):
     class Meta:
         verbose_name = "Atributo Dinámico"
         verbose_name_plural = "Atributos Dinámicos"
-        ordering = ['tipo_producto', 'orden', 'nombre']
-        unique_together = ['nombre', 'tipo_producto']
+        ordering = ['orden', 'nombre']
     
     def __str__(self):
-        return f"{self.nombre} ({self.get_tipo_producto_display()})"
+        cats = self.categorias.all()
+        if cats.exists():
+            return f"{self.nombre} ({', '.join(c.nombre for c in cats)})"
+        return f"{self.nombre} (Todas)"
 
 
 class ValorProducto(models.Model):

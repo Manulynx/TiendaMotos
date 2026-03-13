@@ -1,8 +1,7 @@
-{% extends 'admin_custom/base.html' %} 
-{% block title %}Crear Atributo{% endblock %} 
-{% block page_title %}Nuevo Atributo Dinámico{% endblock %} 
-{% block page_subtitle %}Agrega un nuevo atributo personalizable{% endblock %} 
-{% block content %}
+{% extends 'admin_custom/base.html' %} {% block title %}Crear Atributo{%
+endblock %} {% block page_title %}Nuevo Atributo Dinámico{% endblock %} {% block
+page_subtitle %}Agrega un nuevo atributo personalizable{% endblock %} {% block
+content %}
 <div class="max-w-3xl mx-auto">
   <!-- Breadcrumb -->
   <nav class="flex items-center gap-2 text-sm mb-6" aria-label="Breadcrumb">
@@ -71,6 +70,35 @@
         </p>
       </div>
 
+      <!-- Categorías -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Categorías
+        </label>
+        <div
+          class="border border-gray-300 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto"
+        >
+          {% for categoria in categorias %}
+          <label
+            class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded"
+          >
+            <input
+              type="checkbox"
+              name="categorias"
+              value="{{ categoria.id }}"
+              class="w-4 h-4 text-red-accent border-gray-300 rounded focus:ring-red-accent"
+            />
+            <span class="text-sm text-gray-700">{{ categoria.nombre }}</span>
+          </label>
+          {% empty %}
+          <p class="text-sm text-gray-500">No hay categorías registradas</p>
+          {% endfor %}
+        </div>
+        <p class="mt-1 text-xs text-gray-500">
+          Si no seleccionas ninguna, el atributo aplica a todas las categorías
+        </p>
+      </div>
+
       <!-- Unidad de Medida -->
       <div>
         <label
@@ -108,6 +136,27 @@
         ></textarea>
         <p class="mt-1 text-xs text-gray-500">
           Información adicional sobre este atributo (opcional)
+        </p>
+      </div>
+
+      <!-- Orden -->
+      <div>
+        <label
+          for="orden"
+          class="block text-sm font-semibold text-gray-700 mb-2"
+          >Orden de visualización</label
+        >
+        <input
+          type="number"
+          id="orden"
+          name="orden"
+          value="0"
+          min="0"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-accent focus:border-transparent transition-all"
+          placeholder="0"
+        />
+        <p class="mt-1 text-xs text-gray-500">
+          Los atributos se ordenan de menor a mayor
         </p>
       </div>
 

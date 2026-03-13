@@ -214,15 +214,16 @@ class AtributoDinamicoAdmin(admin.ModelAdmin):
     """
     Administración de atributos dinámicos para productos.
     """
-    list_display = ['nombre', 'tipo_producto', 'unidad_medida', 'orden', 'cantidad_productos', 'fecha_creacion']
-    list_filter = ['tipo_producto', 'fecha_creacion']
+    list_display = ['nombre', 'mostrar_categorias', 'unidad_medida', 'orden', 'cantidad_productos', 'fecha_creacion']
+    list_filter = ['categorias', 'fecha_creacion']
     search_fields = ['nombre', 'descripcion']
     list_editable = ['orden']
-    ordering = ['tipo_producto', 'orden', 'nombre']
+    ordering = ['orden', 'nombre']
+    filter_horizontal = ['categorias']
     
     fieldsets = (
         ('Información del Atributo', {
-            'fields': ('nombre', 'tipo_producto', 'unidad_medida', 'descripcion')
+            'fields': ('nombre', 'categorias', 'unidad_medida', 'descripcion')
         }),
         ('Configuración', {
             'fields': ('orden',)
@@ -233,6 +234,13 @@ class AtributoDinamicoAdmin(admin.ModelAdmin):
         """Cuenta productos que usan este atributo."""
         return obj.valores.count()
     cantidad_productos.short_description = 'Productos usando'
+    
+    def mostrar_categorias(self, obj):
+        cats = obj.categorias.all()
+        if cats.exists():
+            return ', '.join(c.nombre for c in cats)
+        return 'Todas'
+    mostrar_categorias.short_description = 'Categorías'
 
 
 @admin.register(ValorProducto)
@@ -241,7 +249,7 @@ class ValorProductoAdmin(admin.ModelAdmin):
     Administración de valores de atributos de productos.
     """
     list_display = ['producto', 'atributo', 'valor', 'valor_con_unidad']
-    list_filter = ['atributo__tipo_producto', 'atributo']
+    list_filter = ['atributo__categorias', 'atributo']
     search_fields = ['producto__nombre', 'atributo__nombre', 'valor']
     autocomplete_fields = ['producto', 'atributo']
     ordering = ['producto', 'atributo']
