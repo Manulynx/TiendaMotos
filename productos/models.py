@@ -424,3 +424,38 @@ class ValorProducto(models.Model):
             return f"{self.valor} {self.atributo.unidad_medida}"
         return self.valor
 
+
+class ConfiguracionHome(models.Model):
+    """
+    Modelo singleton para configurar la imagen del hero section en la página de inicio.
+    Solo puede existir un registro.
+    """
+    imagen_hero = models.ImageField(
+        upload_to='home/',
+        verbose_name="Imagen del Hero Section"
+    )
+    texto_badge = models.CharField(
+        max_length=50,
+        default='Modelo 2025',
+        blank=True,
+        verbose_name="Texto del badge"
+    )
+    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Última Actualización")
+
+    class Meta:
+        verbose_name = "Configuración Home"
+        verbose_name_plural = "Configuración Home"
+
+    def __str__(self):
+        return "Configuración del Home"
+
+    def save(self, *args, **kwargs):
+        # Singleton: forzar siempre pk=1
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_config(cls):
+        obj, _ = cls.objects.get_or_create(pk=1, defaults={'imagen_hero': ''})
+        return obj
+

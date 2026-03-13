@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Producto, Categoria, ImagenProducto, AtributoDinamico, ValorProducto, Color
+from .models import Producto, Categoria, ImagenProducto, AtributoDinamico, ValorProducto, Color, ConfiguracionHome
 import json
 
 def lista(request):
@@ -732,3 +732,27 @@ def admin_categoria_atributos(request, categoria_id):
             'success': False,
             'message': f'Error al obtener atributos: {str(e)}'
         }, status=400)
+
+
+@staff_member_required(login_url='/productos/admin-custom/login/')
+def admin_hero_config(request):
+    """Configurar la imagen del hero section en el home"""
+    config = ConfiguracionHome.get_config()
+
+    if request.method == 'POST':
+        imagen = request.FILES.get('imagen_hero')
+        texto_badge = request.POST.get('texto_badge', '').strip()
+
+        if imagen:
+            config.imagen_hero = imagen
+        if texto_badge:
+            config.texto_badge = texto_badge
+
+        config.save()
+        messages.success(request, 'Imagen del hero actualizada exitosamente')
+        return redirect('productos:admin_hero_config')
+
+    context = {
+        'config': config,
+    }
+    return render(request, 'admin_custom/hero_config.html', context)

@@ -1,0 +1,142 @@
+{% extends 'admin_custom/base.html' %} {% block title %}Configuración Hero{%
+endblock %} {% block page_title %}Imagen del Hero{% endblock %} {% block
+page_subtitle %}Configura la imagen principal de la página de inicio{% endblock
+%} {% block content %}
+
+<div class="max-w-2xl">
+  <form method="POST" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+
+    <!-- Imagen actual -->
+    {% if config.imagen_hero %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+      <h3 class="text-sm font-semibold text-gray-700 mb-3">Imagen actual</h3>
+      <div class="bg-[#0F172A] rounded-lg p-6 flex items-center justify-center">
+        <img
+          src="{{ config.imagen_hero.url }}"
+          alt="Hero actual"
+          class="max-h-64 object-contain rounded"
+        />
+      </div>
+      <p class="text-xs text-gray-400 mt-2">
+        Última actualización: {{ config.fecha_actualizacion|date:"d/m/Y H:i" }}
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Subir nueva imagen -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+      <h3 class="text-sm font-semibold text-gray-700 mb-3">
+        {% if config.imagen_hero %}Cambiar imagen{% else %}Subir imagen{% endif
+        %}
+      </h3>
+
+      <div
+        id="drop-zone"
+        class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition cursor-pointer"
+      >
+        <input
+          type="file"
+          name="imagen_hero"
+          accept="image/*"
+          id="imagen-input"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <svg
+          class="mx-auto h-12 w-12 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+        <p class="mt-2 text-sm text-gray-600">
+          Haz clic o arrastra una imagen aquí
+        </p>
+        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WebP recomendado</p>
+      </div>
+
+      <!-- Preview -->
+      <div
+        id="preview-container"
+        class="hidden mt-4 bg-[#0F172A] rounded-lg p-6 flex items-center justify-center"
+      >
+        <img
+          id="preview-img"
+          src=""
+          alt="Preview"
+          class="max-h-48 object-contain rounded"
+        />
+      </div>
+    </div>
+
+    <!-- Texto del badge -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+      <label
+        for="texto_badge"
+        class="block text-sm font-semibold text-gray-700 mb-2"
+        >Texto del badge</label
+      >
+      <input
+        type="text"
+        name="texto_badge"
+        id="texto_badge"
+        value="{{ config.texto_badge }}"
+        maxlength="50"
+        placeholder="Ej: Modelo 2025"
+        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+      />
+      <p class="text-xs text-gray-400 mt-1">
+        Se muestra como etiqueta sobre la imagen
+      </p>
+    </div>
+
+    <!-- Botón guardar -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-semibold text-sm"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        Guardar cambios
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const input = document.getElementById("imagen-input");
+  const previewContainer = document.getElementById("preview-container");
+  const previewImg = document.getElementById("preview-img");
+
+  input.addEventListener("change", function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        previewContainer.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+{% endblock %}

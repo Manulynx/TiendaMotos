@@ -41,4 +41,7 @@ urlpatterns = [
     
     # Obtener atributos por categoría
     path('admin-custom/categoria/<int:categoria_id>/atributos/', views.admin_categoria_atributos, name='admin_categoria_atributos'),
+
+    # Configuración Home
+    path('admin-custom/hero/', views.admin_hero_config, name='admin_hero_config'),
 ]

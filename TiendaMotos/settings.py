@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-oow*)ra*=#g=akwmz&li%oe)i4q%qur$*d1rk(m8@0w7jyo9&d')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['motosluxe.pythonanywhere.com',
                  'tiendamotos-production.up.railway.app', 
@@ -158,7 +158,7 @@ if os.environ.get('ENVIRONMENT') == 'production':
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security Headers for Production
-if not DEBUG:
+if os.environ.get('ENVIRONMENT') == 'production':
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
