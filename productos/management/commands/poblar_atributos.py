@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db.models import Count
-from productos.models import AtributoDinamico, ValorProducto
+from productos.models import AtributoDinamico, ValorProducto, Categoria
 
 
 class Command(BaseCommand):
@@ -15,45 +15,80 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        # =========================================================
+        # MAPEO DE CATEGORÍAS
+        # =========================================================
+        # Buscar categorías por keywords comunes
+        categorias_map = {}
+        
+        # Buscar categorías eléctricas
+        cat_electrica = Categoria.objects.filter(
+            nombre__icontains='electrica'
+        ).first() or Categoria.objects.filter(
+            nombre__icontains='e-bike'
+        ).first() or Categoria.objects.filter(
+            nombre__icontains='bicimoto'
+        ).first()
+        if cat_electrica:
+            categorias_map['electrica'] = cat_electrica
+        
+        # Buscar categorías de combustión
+        cat_combustion = Categoria.objects.filter(
+            nombre__icontains='combustion'
+        ).first() or Categoria.objects.filter(
+            nombre__icontains='gasolina'
+        ).first()
+        if cat_combustion:
+            categorias_map['combustion'] = cat_combustion
+        
+        # Buscar categorías de triciclos
+        cat_triciclo = Categoria.objects.filter(
+            nombre__icontains='triciclo'
+        ).first()
+        if cat_triciclo:
+            categorias_map['triciclo'] = cat_triciclo
+        
+        self.stdout.write(self.style.SUCCESS(f'\n📋 Categorías encontradas: {", ".join(c.nombre for c in categorias_map.values()) or "Ninguna"}\n'))
+
         atributos = [
 
-            # === ATRIBUTOS GENERALES ===
-            {'nombre': 'Garantía', 'tipo_producto': 'general', 'unidad_medida': '', 'orden': 99},
-            {'nombre': 'Mensajería', 'tipo_producto': 'general', 'unidad_medida': '', 'orden': 100},
+            # === ATRIBUTOS GENERALES (aplican a todos) ===
+            {'nombre': 'Garantía', 'tipo': 'general', 'unidad_medida': '', 'orden': 99},
+            {'nombre': 'Mensajería', 'tipo': 'general', 'unidad_medida': '', 'orden': 100},
 
             # === MOTOS ELÉCTRICAS ===
-            {'nombre': 'Potencia del Motor', 'tipo_producto': 'electrica', 'unidad_medida': 'W', 'orden': 10},
-            {'nombre': 'Voltaje de Batería', 'tipo_producto': 'electrica', 'unidad_medida': 'V', 'orden': 11},
-            {'nombre': 'Capacidad de Batería', 'tipo_producto': 'electrica', 'unidad_medida': 'Ah', 'orden': 12},
-            {'nombre': 'Tipo de Batería', 'tipo_producto': 'electrica', 'unidad_medida': '', 'orden': 13},
-            {'nombre': 'Velocidad Máxima', 'tipo_producto': 'electrica', 'unidad_medida': 'km/h', 'orden': 14},
-            {'nombre': 'Autonomía', 'tipo_producto': 'electrica', 'unidad_medida': 'km', 'orden': 15},
-            {'nombre': 'Tiempo de Carga', 'tipo_producto': 'electrica', 'unidad_medida': 'horas', 'orden': 16},
-            {'nombre': 'Incluye', 'tipo_producto': 'electrica', 'unidad_medida': '', 'orden': 17},
+            {'nombre': 'Potencia del Motor', 'tipo': 'electrica', 'unidad_medida': 'W', 'orden': 10},
+            {'nombre': 'Voltaje de Batería', 'tipo': 'electrica', 'unidad_medida': 'V', 'orden': 11},
+            {'nombre': 'Capacidad de Batería', 'tipo': 'electrica', 'unidad_medida': 'Ah', 'orden': 12},
+            {'nombre': 'Tipo de Batería', 'tipo': 'electrica', 'unidad_medida': '', 'orden': 13},
+            {'nombre': 'Velocidad Máxima', 'tipo': 'electrica', 'unidad_medida': 'km/h', 'orden': 14},
+            {'nombre': 'Autonomía', 'tipo': 'electrica', 'unidad_medida': 'km', 'orden': 15},
+            {'nombre': 'Tiempo de Carga', 'tipo': 'electrica', 'unidad_medida': 'horas', 'orden': 16},
+            {'nombre': 'Incluye', 'tipo': 'electrica', 'unidad_medida': '', 'orden': 17},
 
             # === MOTOS DE COMBUSTIÓN ===
-            {'nombre': 'Cilindraje', 'tipo_producto': 'combustion', 'unidad_medida': 'cc', 'orden': 20},
-            {'nombre': 'Tipo de Motor', 'tipo_producto': 'combustion', 'unidad_medida': '', 'orden': 21},
-            {'nombre': 'Sistema de Enfriamiento', 'tipo_producto': 'combustion', 'unidad_medida': '', 'orden': 22},
-            {'nombre': 'Capacidad del Tanque', 'tipo_producto': 'combustion', 'unidad_medida': 'L', 'orden': 23},
-            {'nombre': 'Velocidad Máxima', 'tipo_producto': 'combustion', 'unidad_medida': 'km/h', 'orden': 24},
-            {'nombre': 'Rendimiento', 'tipo_producto': 'combustion', 'unidad_medida': 'km/L', 'orden': 25},
-            {'nombre': 'Sistema de Arranque', 'tipo_producto': 'combustion', 'unidad_medida': '', 'orden': 26},
-            {'nombre': 'Transmisión', 'tipo_producto': 'combustion', 'unidad_medida': '', 'orden': 27},
-            {'nombre': 'Tipo de Frenos', 'tipo_producto': 'combustion', 'unidad_medida': '', 'orden': 28},
+            {'nombre': 'Cilindraje', 'tipo': 'combustion', 'unidad_medida': 'cc', 'orden': 20},
+            {'nombre': 'Tipo de Motor', 'tipo': 'combustion', 'unidad_medida': '', 'orden': 21},
+            {'nombre': 'Sistema de Enfriamiento', 'tipo': 'combustion', 'unidad_medida': '', 'orden': 22},
+            {'nombre': 'Capacidad del Tanque', 'tipo': 'combustion', 'unidad_medida': 'L', 'orden': 23},
+            {'nombre': 'Velocidad Máxima', 'tipo': 'combustion', 'unidad_medida': 'km/h', 'orden': 24},
+            {'nombre': 'Rendimiento', 'tipo': 'combustion', 'unidad_medida': 'km/L', 'orden': 25},
+            {'nombre': 'Sistema de Arranque', 'tipo': 'combustion', 'unidad_medida': '', 'orden': 26},
+            {'nombre': 'Transmisión', 'tipo': 'combustion', 'unidad_medida': '', 'orden': 27},
+            {'nombre': 'Tipo de Frenos', 'tipo': 'combustion', 'unidad_medida': '', 'orden': 28},
 
             # === TRICICLOS ===
-            {'nombre': 'Tipo de Energía', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 30},
-            {'nombre': 'Potencia/Cilindraje', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 31},
-            {'nombre': 'Voltaje de Batería', 'tipo_producto': 'triciclo', 'unidad_medida': 'V', 'orden': 32},
-            {'nombre': 'Capacidad de Batería', 'tipo_producto': 'triciclo', 'unidad_medida': 'Ah', 'orden': 33},
-            {'nombre': 'Autonomía', 'tipo_producto': 'triciclo', 'unidad_medida': 'km', 'orden': 34},
-            {'nombre': 'Capacidad de Carga', 'tipo_producto': 'triciclo', 'unidad_medida': 'kg', 'orden': 35},
-            {'nombre': 'Dimensiones de Caja', 'tipo_producto': 'triciclo', 'unidad_medida': 'm', 'orden': 36},
-            {'nombre': 'Tipo de Estructura', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 37},
-            {'nombre': 'Tracción', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 38},
-            {'nombre': 'Sistema de Marchas', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 39},
-            {'nombre': 'Tipo de Cabina', 'tipo_producto': 'triciclo', 'unidad_medida': '', 'orden': 40},
+            {'nombre': 'Tipo de Energía', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 30},
+            {'nombre': 'Potencia/Cilindraje', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 31},
+            {'nombre': 'Voltaje de Batería', 'tipo': 'triciclo', 'unidad_medida': 'V', 'orden': 32},
+            {'nombre': 'Capacidad de Batería', 'tipo': 'triciclo', 'unidad_medida': 'Ah', 'orden': 33},
+            {'nombre': 'Autonomía', 'tipo': 'triciclo', 'unidad_medida': 'km', 'orden': 34},
+            {'nombre': 'Capacidad de Carga', 'tipo': 'triciclo', 'unidad_medida': 'kg', 'orden': 35},
+            {'nombre': 'Dimensiones de Caja', 'tipo': 'triciclo', 'unidad_medida': 'm', 'orden': 36},
+            {'nombre': 'Tipo de Estructura', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 37},
+            {'nombre': 'Tracción', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 38},
+            {'nombre': 'Sistema de Marchas', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 39},
+            {'nombre': 'Tipo de Cabina', 'tipo': 'triciclo', 'unidad_medida': '', 'orden': 40},
             ]
 
         created_count = 0
@@ -72,8 +107,7 @@ class Command(BaseCommand):
         for nombre_attr in atributos_a_eliminar:
 
             atributo = AtributoDinamico.objects.filter(
-                nombre=nombre_attr,
-                tipo_producto='general'
+                nombre=nombre_attr
             ).first()
 
             if atributo:
@@ -115,19 +149,27 @@ class Command(BaseCommand):
 
             atributo, created = AtributoDinamico.objects.get_or_create(
                 nombre=atributo_data['nombre'],
-                tipo_producto=atributo_data['tipo_producto'],
                 defaults={
                     'unidad_medida': atributo_data.get('unidad_medida', ''),
                     'orden': atributo_data.get('orden', 0)
                 }
             )
+            
+            # Asignar categorías según el tipo
+            tipo = atributo_data.get('tipo', 'general')
+            if tipo != 'general' and tipo in categorias_map:
+                atributo.categorias.set([categorias_map[tipo]])
+                cat_nombre = categorias_map[tipo].nombre
+            else:
+                atributo.categorias.clear()  # Sin categorías = aplica a todos
+                cat_nombre = 'Todas'
 
             if created:
 
                 created_count += 1
 
                 self.stdout.write(
-                    self.style.SUCCESS(f'✓ Creado: {atributo}')
+                    self.style.SUCCESS(f'✓ Creado: {atributo.nombre} ({cat_nombre})')
                 )
 
             else:
@@ -139,7 +181,7 @@ class Command(BaseCommand):
                 updated_count += 1
 
                 self.stdout.write(
-                    self.style.WARNING(f'↻ Actualizado: {atributo}')
+                    self.style.WARNING(f'↻ Actualizado: {atributo.nombre} ({cat_nombre})')
                 )
 
         # =========================================================
@@ -148,16 +190,11 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.WARNING('\n🔍 Revisando duplicados...\n'))
 
-        DUPLICADOS_PERMITIDOS = ['Velocidad Máxima']
-
         duplicados = AtributoDinamico.objects.values('nombre').annotate(
             count=Count('id')
         ).filter(count__gt=1)
 
         for dup in duplicados:
-
-            if dup['nombre'] in DUPLICADOS_PERMITIDOS:
-                continue
 
             attrs = AtributoDinamico.objects.filter(nombre=dup['nombre'])
 
@@ -169,10 +206,12 @@ class Command(BaseCommand):
 
             for attr in attrs:
                 valores_count = attr.valores.count()
+                cats = attr.categorias.all()
+                cat_text = ', '.join(c.nombre for c in cats) if cats.exists() else 'Todas'
 
                 self.stdout.write(
                     self.style.NOTICE(
-                        f' - {attr.get_tipo_producto_display()} ({valores_count} valores)'
+                        f'   - {cat_text} ({valores_count} valores)'
                     )
                 )
 
@@ -183,17 +222,14 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING('\n🧹 Eliminando atributos obsoletos...\n'))
 
         atributos_validos = {
-            (a['nombre'], a['tipo_producto'])
-            for a in atributos
+            a['nombre'] for a in atributos
         }
 
         atributos_db = AtributoDinamico.objects.all()
 
         for attr in atributos_db:
 
-            clave = (attr.nombre, attr.tipo_producto)
-
-            if clave not in atributos_validos:
+            if attr.nombre not in atributos_validos:
 
                 valores = ValorProducto.objects.filter(atributo=attr)
 
@@ -206,18 +242,24 @@ class Command(BaseCommand):
                         attr.delete()
 
                         deleted_count += 1
+                        
+                        cats = attr.categorias.all()
+                        cat_text = ', '.join(c.nombre for c in cats) if cats.exists() else 'Todas'
 
                         self.stdout.write(
                             self.style.SUCCESS(
-                                f'🗑 Eliminado "{attr.nombre}" ({attr.tipo_producto}) con {count} valores'
+                                f'🗑 Eliminado "{attr.nombre}" ({cat_text}) con {count} valores'
                             )
                         )
 
                     else:
+                        
+                        cats = attr.categorias.all()
+                        cat_text = ', '.join(c.nombre for c in cats) if cats.exists() else 'Todas'
 
                         self.stdout.write(
                             self.style.WARNING(
-                                f'⚠ "{attr.nombre}" ({attr.tipo_producto}) tiene valores. Usa --force'
+                                f'⚠ "{attr.nombre}" ({cat_text}) tiene valores. Usa --force'
                             )
                         )
 
@@ -225,10 +267,13 @@ class Command(BaseCommand):
 
                     attr.delete()
                     deleted_count += 1
+                    
+                    cats = attr.categorias.all()
+                    cat_text = ', '.join(c.nombre for c in cats) if cats.exists() else 'Todas'
 
                     self.stdout.write(
                         self.style.SUCCESS(
-                            f'🗑 Eliminado "{attr.nombre}" ({attr.tipo_producto})'
+                            f'🗑 Eliminado "{attr.nombre}" ({cat_text})'
                         )
                     )
 

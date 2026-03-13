@@ -104,13 +104,13 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
             <div class="font-semibold text-gray-900">{{ atributo.nombre }}</div>
           </td>
           <td class="px-6 py-4">
-            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in
-            cats %}
+            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in cats %}
             <span
               class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-1 mb-1"
               >{{ cat.nombre }}</span
             >
-            {% endfor %} {% else %}
+            {% endfor %} 
+            {% else %}
             <span
               class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
               >Todas</span
@@ -206,8 +206,7 @@ page_subtitle %}Gestión de atributos personalizables para productos{% endblock%
             </span>
           </div>
           <div class="flex flex-wrap gap-1 mb-2">
-            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in
-            cats %}
+            {% with cats=atributo.categorias.all %} {% if cats %} {% for cat in cats %}
             <span
               class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
               >{{ cat.nombre }}</span
