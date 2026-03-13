@@ -235,8 +235,7 @@
           </div>
 
           <div id="atributos-container" class="space-y-3">
-            {% for atributo in atributos_disponibles %} {% with
-            cats=atributo.categorias.all %}
+            {% for atributo in atributos_disponibles %} {% with cats=atributo.categorias.all %}
             <div
               class="flex items-center gap-3 p-3 {% if not cats %}bg-blue-50{% else %}bg-purple-50{% endif %} rounded-lg"
             >
