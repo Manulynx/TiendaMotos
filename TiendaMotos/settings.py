@@ -156,8 +156,14 @@ if _cl_cloud and _cl_key and _cl_secret:
     )
 # If individual vars aren't set, cloudinary SDK auto-reads CLOUDINARY_URL env var
 
-# Django 5.2 requires STORAGES dict (DEFAULT_FILE_STORAGE / STATICFILES_STORAGE removed)
-if os.environ.get('ENVIRONMENT') == 'production':
+# Activate Cloudinary storage whenever credentials are present (CLOUDINARY_URL or individual vars)
+_use_cloudinary = bool(
+    os.environ.get('CLOUDINARY_URL') or
+    (_cl_cloud and _cl_key and _cl_secret)
+)
+
+# Django 5.2 requires STORAGES dict
+if _use_cloudinary:
     STORAGES = {
         "default": {
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",

@@ -219,6 +219,9 @@ class Producto(models.Model):
                         self.imagen_principal = self._redimensionar_imagen(self.imagen_principal)
             except Exception as e:
                 print(f"Error al redimensionar imagen: {e}")
+                # Reset file pointer so storage backend can still read the original
+                if hasattr(self.imagen_principal, 'seek'):
+                    self.imagen_principal.seek(0)
         
         super().save(*args, **kwargs)
     
@@ -338,6 +341,9 @@ class ImagenProducto(models.Model):
                         self.imagen = self._redimensionar_imagen(self.imagen)
             except Exception as e:
                 print(f"Error al redimensionar imagen: {e}")
+                # Reset file pointer so storage backend can still read the original
+                if hasattr(self.imagen, 'seek'):
+                    self.imagen.seek(0)
         
         super().save(*args, **kwargs)
     
