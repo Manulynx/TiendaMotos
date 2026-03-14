@@ -139,26 +139,37 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Static files storage
-if os.environ.get('ENVIRONMENT') == 'production':
-    STATICFILES_STORAGE = "cloudinary_storage.storage.StaticHashedCloudinaryStorage"
-else:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-# Media files - Cloudinary en producción, local en desarrollo
+# Media files
 MEDIA_URL = '/media/'
 if os.environ.get('ENVIRONMENT') != 'production':
     MEDIA_ROOT = BASE_DIR / 'media'
 
+# Cloudinary config
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
 )
 
-# Use Cloudinary for media files in production
+# Django 5.2 requires STORAGES dict (DEFAULT_FILE_STORAGE / STATICFILES_STORAGE removed)
 if os.environ.get('ENVIRONMENT') == 'production':
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage",
+        },
+    }
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 
 
