@@ -361,19 +361,19 @@
         </div>
 
         <div
-          class="bg-[#f0f2f5] h-[290px] flex flex-col items-center justify-center relative pt-5 overflow-hidden"
+          class="bg-[#f0f2f5] h-[320px] flex flex-col items-center justify-center relative pt-5 overflow-hidden"
         >
           {% if prod.imagen_principal %}
           <img
             src="{{ prod.imagen_principal.url }}"
             alt="{{ prod.nombre }}"
-            class="max-w-[78%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
+            class="max-w-[88%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
           />
           {% else %}
           <img
             src="{% static 'images/hero.webp' %}"
             alt="{{ prod.nombre }}"
-            class="max-w-[78%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
+            class="max-w-[88%] max-h-[95%] z-20 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-2"
           />
           {% endif %}
 

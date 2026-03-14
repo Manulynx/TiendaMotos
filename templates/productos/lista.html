@@ -385,18 +385,18 @@
           </div>
 
           <!-- Imagen del Producto -->
-          <div class="bg-[#e8ebf2] h-[320px] flex items-center justify-center relative overflow-hidden">
+          <div class="bg-[#e8ebf2] h-[360px] flex items-center justify-center relative overflow-hidden">
             {% if producto.imagen_principal %}
             <img
               src="{{ producto.imagen_principal.url }}"
               alt="{{ producto.nombre }}"
-              class="max-w-[82%] max-h-[92%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+              class="max-w-[90%] max-h-[95%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
             />
             {% else %}
             <img
               src="{% static 'images/hero.webp' %}"
               alt="{{ producto.nombre }}"
-              class="max-w-[82%] max-h-[92%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
+              class="max-w-[90%] max-h-[95%] object-contain z-10 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-3"
             />
             {% endif %}
             
