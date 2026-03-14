@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['www.motosluxe.store',
                  'tiendamotos-production.up.railway.app', 
                  'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = [
-    "https://www.motosluxe.com"
+    "https://www.motosluxe.store"
 ]
 
 # Application definition
