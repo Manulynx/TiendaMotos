@@ -281,7 +281,7 @@
   </div>
 
   <!-- Mapa de Google Maps -->
-  <div class="space-y-4 md:space-y-6">
+  <div class="flex flex-col gap-4 md:gap-6">
     <div>
       <h2
         class="font-heading font-bold text-2xl md:text-3xl text-blue-dark mb-3 md:mb-4"
@@ -296,7 +296,7 @@
 
     <!-- Google Maps Embed -->
     <div
-      class="relative rounded-xl overflow-hidden shadow-2xl border-4 border-white group"
+      class="relative rounded-xl overflow-hidden shadow-2xl border-4 border-white group flex-1 min-h-[300px]"
     >
       <div
         class="absolute inset-0 bg-gradient-to-br from-blue-dark/20 to-red-accent/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
@@ -313,7 +313,7 @@
         allowfullscreen=""
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
-        class="relative z-20 h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[600px]"
+        class="relative z-20 w-full h-full min-h-[300px]"
       ></iframe>
 
       <!-- Botón flotante para abrir en Google Maps -->
