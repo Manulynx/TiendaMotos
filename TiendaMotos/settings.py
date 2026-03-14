@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    "cloudinary_storage",
     'django.contrib.staticfiles',
+    "cloudinary_storage",
     "cloudinary",
     'productos',
 ]
@@ -158,7 +158,7 @@ if os.environ.get('ENVIRONMENT') == 'production':
             "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
         },
         "staticfiles": {
-            "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage",
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
 else:
