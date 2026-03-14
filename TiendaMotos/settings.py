@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import cloudinary
-from cloudinary.utils import cloudinary_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,12 +143,18 @@ MEDIA_URL = '/media/'
 if os.environ.get('ENVIRONMENT') != 'production':
     MEDIA_ROOT = BASE_DIR / 'media'
 
-# Cloudinary config
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-)
+# Cloudinary config - supports both CLOUDINARY_URL and individual env vars
+_cl_cloud = os.environ.get("CLOUDINARY_CLOUD_NAME")
+_cl_key = os.environ.get("CLOUDINARY_API_KEY")
+_cl_secret = os.environ.get("CLOUDINARY_API_SECRET")
+
+if _cl_cloud and _cl_key and _cl_secret:
+    cloudinary.config(
+        cloud_name=_cl_cloud,
+        api_key=_cl_key,
+        api_secret=_cl_secret,
+    )
+# If individual vars aren't set, cloudinary SDK auto-reads CLOUDINARY_URL env var
 
 # Django 5.2 requires STORAGES dict (DEFAULT_FILE_STORAGE / STATICFILES_STORAGE removed)
 if os.environ.get('ENVIRONMENT') == 'production':
